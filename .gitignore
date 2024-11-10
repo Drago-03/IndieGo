@@ -1,0 +1,43 @@
+# Python specific
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.log
+
+# Virtual environment
+venv/
+env/
+
+# Environment variables
+*.env
+.env
+
+# IDE and editor settings
+.vscode/
+.idea/
+*.swp
+
+# macOS system files
+.DS_Store
+
+# Logs and databases
+*.sqlite3
+*.db
+*.log
+
+# Pytest cache
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Byte-compiled and temporary files
+*.pyo
+*.pyd
+*.pdb
+*.tmp
+*.bak
+*.old
+
+# Docker ignore (if you’re using Docker)
+docker-compose.override.yml
