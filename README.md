@@ -94,7 +94,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- [Discord Server](https://discord.gg/8WXCahpV)
+- [Discord Server](https://discord.gg/9bPsjgnJ5v)
 - [GitHub Issues](https://github.com/Drago-03/IndieGo/issues)
 - [Email Support](mailto:mantejarora@gmail.com)
 
