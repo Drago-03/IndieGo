@@ -1,0 +1,44 @@
+{
+  "tiers": {
+    "free": {
+      "code_reviews_per_day": 5,
+      "ai_responses_per_day": 10,
+      "max_ticket_categories": 1,
+      "custom_commands": false,
+      "advanced_analytics": false,
+      "priority_support": false
+    },
+    "pro": {
+      "price_monthly": 9.99,
+      "code_reviews_per_day": 20,
+      "ai_responses_per_day": 50,
+      "max_ticket_categories": 5,
+      "custom_commands": true,
+      "advanced_analytics": true,
+      "priority_support": false,
+      "features": [
+        "GitHub integration",
+        "Code quality checks",
+        "Custom welcome messages",
+        "Advanced logging"
+      ]
+    },
+    "enterprise": {
+      "price_monthly": 29.99,
+      "code_reviews_per_day": "unlimited",
+      "ai_responses_per_day": "unlimited",
+      "max_ticket_categories": "unlimited",
+      "custom_commands": true,
+      "advanced_analytics": true,
+      "priority_support": true,
+      "features": [
+        "All Pro features",
+        "Custom AI model training",
+        "API access",
+        "Priority ticket handling",
+        "24/7 support",
+        "Custom integrations"
+      ]
+    }
+  }
+}

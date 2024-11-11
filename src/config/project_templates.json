@@ -1,0 +1,113 @@
+{
+  "python-web": {
+    "name": "Python Web Application",
+    "description": "Template for Python web applications using FastAPI",
+    "structure": [
+      "src/",
+      {
+        "api": [
+          "routes/",
+          "models/",
+          "schemas/",
+          "dependencies.py",
+          "main.py"
+        ]
+      },
+      {
+        "tests": [
+          "test_api/",
+          "test_models/",
+          "conftest.py"
+        ]
+      },
+      {
+        "docs": [
+          "api.md",
+          "setup.md",
+          "deployment.md"
+        ]
+      },
+      "requirements.txt",
+      "README.md",
+      "Dockerfile",
+      ".env.example"
+    ],
+    "setup_instructions": "1. Create virtual environment\n2. Install dependencies\n3. Copy .env.example to .env\n4. Run migrations\n5. Start development server"
+  },
+  "react-app": {
+    "name": "React Application",
+    "description": "Template for React applications with TypeScript",
+    "structure": [
+      "src/",
+      {
+        "components": [
+          "common/",
+          "features/",
+          "layouts/"
+        ]
+      },
+      {
+        "hooks": [
+          "useAuth.ts",
+          "useApi.ts",
+          "useTheme.ts"
+        ]
+      },
+      {
+        "services": [
+          "api.ts",
+          "auth.ts",
+          "storage.ts"
+        ]
+      },
+      {
+        "types": [
+          "index.d.ts"
+        ]
+      },
+      "package.json",
+      "tsconfig.json",
+      "README.md",
+      ".env.example"
+    ],
+    "setup_instructions": "1. Install dependencies with npm install\n2. Copy .env.example to .env\n3. Configure environment variables\n4. Start development server with npm start"
+  },
+  "microservice": {
+    "name": "Microservice Template",
+    "description": "Template for Node.js microservice",
+    "structure": [
+      "src/",
+      {
+        "api": [
+          "controllers/",
+          "middlewares/",
+          "routes/"
+        ]
+      },
+      {
+        "services": [
+          "database.ts",
+          "cache.ts",
+          "queue.ts"
+        ]
+      },
+      {
+        "config": [
+          "index.ts",
+          "logger.ts"
+        ]
+      },
+      {
+        "tests": [
+          "integration/",
+          "unit/"
+        ]
+      },
+      "package.json",
+      "Dockerfile",
+      "docker-compose.yml",
+      "README.md"
+    ],
+    "setup_instructions": "1. Install dependencies\n2. Configure environment variables\n3. Start services with docker-compose up\n4. Run migrations\n5. Start development server"
+  }
+}
