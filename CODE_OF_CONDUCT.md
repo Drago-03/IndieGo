@@ -45,7 +45,7 @@ an individual is officially representing the community in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project team at conduct@your-domain.com. All complaints will be
+reported to the project team at mantejarora@gmail.com. All complaints will be
 reviewed and investigated promptly and fairly.
 
 ## Attribution
