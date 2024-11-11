@@ -2,7 +2,7 @@
 
 A premium Discord bot designed for developer communities, featuring advanced code analysis, project management, and AI-powered assistance.
 
-![DevAssist Banner](assets/banner.png)
+![DevAssist Banner](IndieGo/IndieGO.JPG)
 
 [![Discord](https://img.shields.io/discord/YOUR_DISCORD_SERVER_ID)](https://discord.gg/your-invite)
 [![License](https://img.shields.io/github/license/your-username/devassist-bot)](LICENSE)
