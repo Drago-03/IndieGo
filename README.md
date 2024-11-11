@@ -1,11 +1,11 @@
-# DevAssist Discord Bot
+# IndieGO Bot
 
 A premium Discord bot designed for developer communities, featuring advanced code analysis, project management, and AI-powered assistance.
 
 ![DevAssist Banner](assets/banner.png)
 
 [![Discord](https://img.shields.io/discord/YOUR_DISCORD_SERVER_ID)](https://discord.gg/your-invite)
-[![License](https://img.shields.io/github/license/your-username/devassist-bot)](LICENSE)
+[![License](https://img.shields.io/github/license/Drago-03/IndieGo.git)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![Code Style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
@@ -37,8 +37,8 @@ A premium Discord bot designed for developer communities, featuring advanced cod
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/devassist-bot.git
-   cd devassist-bot
+   git clone https://github.com/Drago-03/IndieGo.git
+   cd IndieGo
    ```
 
 2. Install dependencies:
