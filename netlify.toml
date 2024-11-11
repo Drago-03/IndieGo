@@ -14,7 +14,7 @@
 
 [[redirects]]
   from = "/github"
-  to = "https://github.com/your-username/devassist-bot"
+  to = "https://github.com/Drago-03/IndieGo.git"
   status = 302
 
 [headers]

@@ -2,11 +2,13 @@
 .gradient-text {
     background: linear-gradient(45deg, #9f7aea, #667eea);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .feature-card {
     background: rgba(26, 32, 44, 0.8);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: transform 0.3s ease;
