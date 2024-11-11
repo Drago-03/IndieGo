@@ -2,7 +2,7 @@
 
 A premium Discord bot designed for developer communities, featuring advanced code analysis, project management, and AI-powered assistance.
 
-![DevAssist Banner](assets/banner.png)
+![DevAssist Banner](IndieGO.JPG)
 
 [![Discord](https://img.shields.io/discord/YOUR_DISCORD_SERVER_ID)](https://discord.gg/your-invite)
 [![License](https://img.shields.io/github/license/Drago-03/IndieGo.git)](LICENSE)
@@ -89,13 +89,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [discord.py](https://github.com/Rapptz/discord.py)
 - [OpenAI](https://openai.com/)
+- [Gemini AI](https://gemini.google.com/app)
 - All our contributors and supporters
 
 ## 📞 Support
 
-- [Discord Server](https://discord.gg/your-invite)
-- [GitHub Issues](https://github.com/your-username/devassist-bot/issues)
-- [Email Support](mailto:support@your-domain.com)
+- [Discord Server](https://discord.gg/8WXCahpV)
+- [GitHub Issues](https://github.com/Drago-03/IndieGo/issues)
+- [Email Support](mailto:mantejarora@gmail.com)
 
 ## 🔒 Security
 
