@@ -1,0 +1,24 @@
+{
+  "default_intents": {
+    "messages": true,
+    "message_content": true,
+    "guilds": true,
+    "members": true,
+    "reactions": true,
+    "emojis": true,
+    "presences": false,
+    "voice_states": false
+  },
+  "premium_intents": {
+    "messages": true,
+    "message_content": true,
+    "guilds": true,
+    "members": true,
+    "reactions": true,
+    "emojis": true,
+    "presences": true,
+    "voice_states": true,
+    "typing": true,
+    "guild_scheduled_events": true
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "categories": {
+    "programming": {
+      "code_review": {
+        "description": "Review code for best practices and improvements",
+        "usage": "!review <code_block>",
+        "cooldown": 60,
+        "premium_only": false
+      },
+      "debug": {
+        "description": "Help debug code issues",
+        "usage": "!debug <code_block>",
+        "cooldown": 30,
+        "premium_only": false
+      },
+      "explain": {
+        "description": "Explain code in detail",
+        "usage": "!explain <code_block>",
+        "cooldown": 30,
+        "premium_only": false
+      },
+      "optimize": {
+        "description": "Suggest code optimizations",
+        "usage": "!optimize <code_block>",
+        "cooldown": 60,
+        "premium_only": true
+      }
+    },
+    "project_management": {
+      "create_project": {
+        "description": "Create a new project structure",
+        "usage": "!create_project <name> <type>",
+        "cooldown": 300,
+        "premium_only": true
+      },
+      "estimate": {
+        "description": "Estimate project complexity and time",
+        "usage": "!estimate <requirements>",
+        "cooldown": 300,
+        "premium_only": true
+      }
+    }
+  }
+}
