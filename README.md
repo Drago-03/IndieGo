@@ -4,7 +4,7 @@ A premium Discord bot designed for developer communities, featuring advanced cod
 
 ![DevAssist Banner](IndieGO.JPG)
 
-[![Discord](https://img.shields.io/discord/YOUR_DISCORD_SERVER_ID)](https://discord.gg/your-invite)
+[![Discord](https://img.shields.io/discord/1292805470117171231)](https://discord.gg/9bPsjgnJ5v)
 [![License](https://img.shields.io/github/license/Drago-03/IndieGo.git)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![Code Style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
