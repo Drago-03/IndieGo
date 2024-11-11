@@ -1,0 +1,24 @@
+[build]
+  publish = "website"
+  command = "# no build command needed"
+
+[[redirects]]
+  from = "/invite"
+  to = "https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands"
+  status = 302
+
+[[redirects]]
+  from = "/discord"
+  to = "https://discord.gg/your-invite"
+  status = 302
+
+[[redirects]]
+  from = "/github"
+  to = "https://github.com/your-username/devassist-bot"
+  status = 302
+
+[headers]
+  for = "/*"
+    [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
