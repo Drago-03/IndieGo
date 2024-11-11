@@ -23,6 +23,21 @@
         "Advanced logging"
       ]
     },
+    "team": {
+      "price_monthly": 19.99,
+      "code_reviews_per_day": 50,
+      "ai_responses_per_day": 100,
+      "max_ticket_categories": 10,
+      "custom_commands": true,
+      "advanced_analytics": true,
+      "priority_support": true,
+      "features": [
+        "All Pro features",
+        "Team management",
+        "Custom ticket categories",
+        "Custom ticket forms"
+      ]
+    },
     "enterprise": {
       "price_monthly": 29.99,
       "code_reviews_per_day": "unlimited",
