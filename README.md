@@ -25,6 +25,12 @@ A premium Discord bot designed for developer communities, featuring advanced cod
 - Custom commands
 - Advanced logging
 
+### Team Tier ($19.99/month)
+- All Pro features
+- Team management
+- Custom ticket categories
+- Custom ticket forms
+
 ### Enterprise Tier ($29.99/month)
 - Custom AI model training
 - Unlimited code reviews
