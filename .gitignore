@@ -39,5 +39,8 @@ env/
 *.bak
 *.old
 
-# Docker ignore (if you’re using Docker)
+# Docker ignore
 docker-compose.override.yml
+
+# website
+website/
