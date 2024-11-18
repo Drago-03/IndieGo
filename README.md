@@ -8,6 +8,7 @@ A premium Discord bot designed for developer communities, featuring advanced cod
 [![License](https://img.shields.io/github/license/Drago-03/IndieGo.git)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![Code Style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
+[![Author](https://img.shields.io/badge/author-Drago-purple)](https://github.com/Drago-03)
 
 ## 🌟 Features
 
@@ -67,6 +68,10 @@ A premium Discord bot designed for developer communities, featuring advanced cod
    ```bash
    python src/main.py
    ```
+
+### Invite the Bot
+- [Standard Invitation](https://indiegos.netlify.app/invite)
+- [Linked Roles Setup](https://indiegos.netlify.app/verify)
 
 ## 📚 Documentation
 
