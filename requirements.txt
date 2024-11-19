@@ -1,6 +1,50 @@
+# Discord bot framework
 discord.py>=2.3.0
+
+# Environment variable management
 python-dotenv>=1.0.0
+
+# FastAPI for creating APIs
 fastapi>=0.100.0
+
+# ASGI server for FastAPI
 uvicorn>=0.22.0
+
+# Cryptographic library used by discord.py
 pynacl>=1.5.0
+
+# Handling multipart/form-data for file uploads
 python-multipart>=0.0.6
+
+# OpenAI API client
+openai>=0.27.0
+
+# Anthropic Claude API client
+anthropic>=0.2.0
+
+# Google Gemini AI API client
+google-generativeai>=0.1.0
+
+# Requests library for making HTTP requests
+requests>=2.28.0
+
+# JSON handling
+ujson>=5.4.0
+
+# SQLAlchemy for database interactions
+sqlalchemy>=1.4.0
+
+# Alembic for database migrations
+alembic>=1.7.0
+
+# Pytest for testing
+pytest>=7.1.0
+
+# Black for code formatting
+black>=22.3.0
+
+# Pre-commit for managing pre-commit hooks
+pre-commit>=2.19.0
+
+# Logging configuration
+loguru>=0.6.0

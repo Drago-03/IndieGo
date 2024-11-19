@@ -14,8 +14,13 @@ initial_extensions = [
     'cogs.moderation',
     'cogs.fun',
     'cogs.admin',
-    'cogs.tickets'
+    'cogs.tickets',
+    'cogs.logging',
+    'cogs.ai_assistant',
+    'cogs.coding_help',
+    'cogs.help'
 ]
+
 class IndieGOBot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=PREFIX, intents=intents)
@@ -34,23 +39,12 @@ class IndieGOBot(commands.Bot):
 
 bot = IndieGOBot()
 
-# Example slash command
-@bot.tree.command(name="help", description="Show bot help and commands")
-async def help(interaction: discord.Interaction):
-    embed = discord.Embed(
-        title="IndieGO Bot Help",
-        description="Here are my available commands:",
-        color=discord.Color.blue()
-    )
-    # Add command categories...
-    await interaction.response.send_message(embed=embed)
-
 @bot.event
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
     await bot.change_presence(activity=discord.Activity(
         type=discord.ActivityType.watching,
-        name="for .help | /help"
+        name="for /help"
     ))
 
 bot.run(TOKEN)
