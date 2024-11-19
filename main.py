@@ -1,9 +1,12 @@
+import os
 import discord
 from discord.ext import commands
-from config import TOKEN, PREFIX
-from discord import app_commands
+from flask import Flask
+from threading import Thread
 
-# Set up intents
+# Bot configuration
+TOKEN = os.getenv('DISCORD_TOKEN')
+PREFIX = '!'
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
@@ -47,4 +50,20 @@ async def on_ready():
         name="for /help"
     ))
 
-bot.run(TOKEN)
+# Flask web server to keep the bot running
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "IndieGO Bot is running!"
+
+def run():
+    app.run(host='0.0.0.0', port=8080)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
+if __name__ == "__main__":
+    keep_alive()
+    bot.run(TOKEN)
