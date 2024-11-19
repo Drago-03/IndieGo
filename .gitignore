@@ -43,4 +43,4 @@ env/
 docker-compose.override.yml
 
 # website
-#website/ :ignored
+website/
