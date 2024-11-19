@@ -8,6 +8,14 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
+# List of initial extensions to load
+initial_extensions = [
+    'cogs.general',
+    'cogs.moderation',
+    'cogs.fun',
+    'cogs.admin',
+    'cogs.tickets'
+]
 class IndieGOBot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=PREFIX, intents=intents)
