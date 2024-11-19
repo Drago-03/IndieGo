@@ -9,6 +9,7 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 PREFIX = '!'
 TICKET_CATEGORY_ID = None
 STAFF_ROLE_ID = None
+LOG_CHANNEL_ID = 1308525133048188949
 
 # URLs and Endpoints
 BOT_WEBSITE = "https://devassist-bot.netlify.app"

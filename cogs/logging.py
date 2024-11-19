@@ -18,10 +18,13 @@ class Logging(commands.Cog):
 
         log_channel_names = ["general-logs", "error-logs", "command-logs"]
         for name in log_channel_names:
-            channel = discord.utils.get(guild.text_channels, name=name)
-            if not channel:
-                channel = await guild.create_text_channel(name, category=self.log_category)
-            self.log_channels[name] = channel
+            try:
+                channel = discord.utils.get(guild.text_channels, name=name)
+                if not channel:
+                    channel = await guild.create_text_channel(name, category=self.log_category)
+                self.log_channels[name] = channel
+            except Exception as e:
+                print(f"Failed to create or get channel {name}: {e}")
 
     async def is_premium(self, user_id):
         # Check if the user has a premium subscription
@@ -34,27 +37,30 @@ class Logging(commands.Cog):
             return False
         return False
 
-    @app_commands.command(name="log", description="Log a message")
-    async def log(self, interaction: discord.Interaction, log_type: str, message: str):
-        if not await self.is_premium(interaction.user.id):
-            await interaction.response.send_message("This is a premium feature. Please subscribe to access it.", ephemeral=True)
-            return
+    @commands.command(name="initialize_logs")
+    async def initialize_logs_command(self, ctx):
+        """Setup logging channels"""
+        guild = ctx.guild
+        self.log_category = discord.utils.get(guild.categories, name="Logs")
+        if not self.log_category:
+            self.log_category = await guild.create_category("Logs")
 
-        if log_type not in self.log_channels:
-            await interaction.response.send_message("Invalid log type.", ephemeral=True)
-            return
+        log_channel_names = ["general-logs", "error-logs", "command-logs"]
+        for name in log_channel_names:
+            try:
+                channel = discord.utils.get(guild.text_channels, name=name)
+                if not channel:
+                    channel = await guild.create_text_channel(name, category=self.log_category)
+                self.log_channels[name] = channel
+            except Exception as e:
+                await ctx.send(f"Failed to create or get channel {name}: {e}")
+                return
 
-        embed = discord.Embed(title="Log Entry", description=message, color=discord.Color.blue())
-        embed.set_footer(text=f"Logged by {interaction.user}", icon_url=interaction.user.avatar.url)
-        await self.log_channels[log_type].send(embed=embed)
-        await interaction.response.send_message("Log entry created.", ephemeral=True)
+        await ctx.send("Logging channels setup successfully.")
 
-    @app_commands.command(name="setup_logs", description="Setup logging channels")
-    async def setup_logs(self, interaction: discord.Interaction):
-        if not await self.is_premium(interaction.user.id):
-            await interaction.response.send_message("This is a premium feature. Please subscribe to access it.", ephemeral=True)
-            return
-
+    @app_commands.command(name="initialize_logs", description="Setup logging channels")
+    async def initialize_logs(self, interaction: discord.Interaction):
+        """Setup logging channels"""
         guild = interaction.guild
         self.log_category = discord.utils.get(guild.categories, name="Logs")
         if not self.log_category:
@@ -62,12 +68,16 @@ class Logging(commands.Cog):
 
         log_channel_names = ["general-logs", "error-logs", "command-logs"]
         for name in log_channel_names:
-            channel = discord.utils.get(guild.text_channels, name=name)
-            if not channel:
-                channel = await guild.create_text_channel(name, category=self.log_category)
-            self.log_channels[name] = channel
+            try:
+                channel = discord.utils.get(guild.text_channels, name=name)
+                if not channel:
+                    channel = await guild.create_text_channel(name, category=self.log_category)
+                self.log_channels[name] = channel
+            except Exception as e:
+                await interaction.response.send_message(f"Failed to create or get channel {name}: {e}", ephemeral=True)
+                return
 
-        await interaction.response.send_message("Logging channels setup completed.", ephemeral=True)
+        await interaction.response.send_message("Logging channels setup successfully.", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(Logging(bot))

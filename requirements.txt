@@ -4,18 +4,6 @@ discord.py>=2.3.0
 # Environment variable management
 python-dotenv>=1.0.0
 
-# FastAPI for creating APIs
-fastapi>=0.100.0
-
-# ASGI server for FastAPI
-uvicorn>=0.22.0
-
-# Cryptographic library used by discord.py
-pynacl>=1.5.0
-
-# Handling multipart/form-data for file uploads
-python-multipart>=0.0.6
-
 # OpenAI API client
 openai>=0.27.0
 
@@ -43,8 +31,17 @@ pytest>=7.1.0
 # Black for code formatting
 black>=22.3.0
 
-# Pre-commit for managing pre-commit hooks
-pre-commit>=2.19.0
+# Flask for web server
+flask>=2.0.0
+
+# Aiohttp for asynchronous HTTP requests
+aiohttp>=3.8.0
+
+# Aiosqlite for asynchronous SQLite interactions
+aiosqlite>=0.17.0
 
 # Logging configuration
 loguru>=0.6.0
+
+transformers>=4.0.0
+torch>=1.7.0
