@@ -51,9 +51,6 @@ aiosqlite>=0.17.0
 
 # Logging configuration
 loguru>=0.6.0
-<<<<<<< HEAD
 
 transformers>=4.0.0
 torch>=1.7.0
-=======
->>>>>>> fb361bc5202c768da8ba7143c89d615e4483a178
