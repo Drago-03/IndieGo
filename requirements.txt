@@ -31,17 +31,8 @@ pytest>=7.1.0
 # Black for code formatting
 black>=22.3.0
 
-# Flask for web server
-flask>=2.0.0
-
-# Aiohttp for asynchronous HTTP requests
-aiohttp>=3.8.0
-
-# Aiosqlite for asynchronous SQLite interactions
-aiosqlite>=0.17.0
+# Pre-commit for managing pre-commit hooks
+pre-commit>=2.19.0
 
 # Logging configuration
 loguru>=0.6.0
-
-transformers>=4.0.0
-torch>=1.7.0
