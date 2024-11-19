@@ -5,6 +5,34 @@ import anthropic
 import google.generativeai as genai
 import os
 import random
+from discord import app_commands
+import asyncio
+from dotenv import load_dotenv
+import json
+
+from config import INSTALL_URL
+
+load_dotenv()
+
+# Bot Configuration
+TOKEN = os.getenv('DISCORD_TOKEN')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+PREFIX = '.'
+TICKET_CATEGORY_ID = None
+STAFF_ROLE_ID = None
+LOG_CHANNEL_ID = 1308525133048188949
+
+# URLs and Endpoints
+BOT_WEBSITE = "https://drago-03.github.io/IndieGo-Website/"
+INTERACTIONS_URL = f"{BOT_WEBSITE}/api/interactions"
+LINKED_ROLES_URL = f"{BOT_WEBSITE}/api/linked-roles"
+TERMS_URL = f"{BOT_WEBSITE}/terms"
+PRIVACY_URL = f"{BOT_WEBSITE}/privacy"
+INSTALL_URL = f"https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands"
+OAUTH2_URL = f"https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&redirect_uri={BOT_WEBSITE}/callback&response_type=code&scope=identify%20guilds"
+
+# Branding
+EMBED_COLOR = 0x9F7AEA  # Purple
 
 class AIAssistant(commands.Cog):
     def __init__(self, bot):
@@ -26,77 +54,31 @@ class AIAssistant(commands.Cog):
             )
             return response.choices[0].message.content
         except Exception as e:
-            return f"OpenAI Error: {str(e)}"
+            return f"An error occurred: {str(e)}"
 
-    async def get_claude_response(self, prompt, system_prompt):
-        try:
-            message = await self.claude.messages.create(
-                model="claude-3-opus-20240229",
-                max_tokens=1024,
-                system=system_prompt,
-                messages=[{"role": "user", "content": prompt}]
-            )
-            return message.content
-        except Exception as e:
-            return f"Claude Error: {str(e)}"
-
-    async def get_gemini_response(self, prompt):
-        try:
-            response = await self.gemini.generate_content(prompt)
-            return response.text
-        except Exception as e:
-            return f"Gemini Error: {str(e)}"
-
-    @app_commands.command(name="codehelp", description="Get coding help using multiple AI models")
-    async def codehelp(self, interaction: discord.Interaction, question: str):
-        """Get coding help using multiple AI models"""
-        system_prompt = """You are an expert programming assistant. Provide clear, 
-        concise explanations with practical code examples. Focus on best practices 
-        and modern development approaches."""
-        
-        # Randomly select an AI provider
-        provider = random.choice(['openai', 'claude', 'gemini'])
-        
-        async with interaction.channel.typing():
-            if provider == 'openai':
-                answer = await self.get_openai_response(question, system_prompt)
-            elif provider == 'claude':
-                answer = await self.get_claude_response(question, system_prompt)
-            else:
-                answer = await self.get_gemini_response(question)
-
-            # Split long responses
-            if len(answer) > 2000:
-                parts = [answer[i:i+1990] for i in range(0, len(answer), 1990)]
-                for part in parts:
-                    await interaction.response.send_message(f"```{part}```")
-            else:
-                await interaction.response.send_message(f"```{answer}```")
+    @commands.command(name="ask")
+    async def ask_command(self, ctx, *, question: str):
+        """Ask a general question to the AI assistant"""
+        answer = await self.get_openai_response(question, "You are a helpful assistant.")
+        await ctx.send(answer)
 
     @app_commands.command(name="ask", description="Ask a general question to the AI assistant")
     async def ask(self, interaction: discord.Interaction, question: str):
         """Ask a general question to the AI assistant"""
-        system_prompt = """You are a helpful assistant in a developer community. 
-        Provide friendly, informative responses while maintaining professionalism."""
-        
-        # Randomly select an AI provider
-        provider = random.choice(['openai', 'claude', 'gemini'])
-        
-        async with interaction.channel.typing():
-            if provider == 'openai':
-                answer = await self.get_openai_response(question, system_prompt)
-            elif provider == 'claude':
-                answer = await self.get_claude_response(question, system_prompt)
-            else:
-                answer = await self.get_gemini_response(question)
+        answer = await self.get_openai_response(question, "You are a helpful assistant.")
+        await interaction.response.send_message(answer)
 
-            # Split long responses
-            if len(answer) > 2000:
-                parts = [answer[i:i+1990] for i in range(0, len(answer), 1990)]
-                for part in parts:
-                    await interaction.response.send_message(part)
-            else:
-                await interaction.response.send_message(answer)
+    @commands.command(name="codehelp")
+    async def codehelp_command(self, ctx, *, code: str):
+        """Get coding help using multiple AI models"""
+        help_response = await self.get_openai_response(code, "You are a helpful coding assistant.")
+        await ctx.send(help_response)
+
+    @app_commands.command(name="codehelp", description="Get coding help using multiple AI models")
+    async def codehelp(self, interaction: discord.Interaction, code: str):
+        """Get coding help using multiple AI models"""
+        help_response = await self.get_openai_response(code, "You are a helpful coding assistant.")
+        await interaction.response.send_message(help_response)
 
 async def setup(bot):
     await bot.add_cog(AIAssistant(bot))
