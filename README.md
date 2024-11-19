@@ -5,10 +5,13 @@ A premium Discord bot designed for developer communities, featuring advanced cod
 ![DevAssist Banner](IndieGO.JPG)
 
 [![Discord](https://img.shields.io/discord/1292805470117171231)](https://discord.gg/9bPsjgnJ5v)
-[![License](https://img.shields.io/github/license/Drago-03/IndieGo.git)](LICENSE)
+[![License](https://img.shields.io/badge/license-Boost%201.0-lightgrey)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![Code Style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 [![Author](https://img.shields.io/badge/author-Drago-purple)](https://github.com/Drago-03)
+[![Servers](https://img.shields.io/badge/dynamic/json?color=blue&label=servers&query=server_count&url=https://api.example.com/bot/stats)](https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot)
+[![Invite](https://img.shields.io/badge/invite-IndieGO-green)](https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot)
+[![Twitter](https://img.shields.io/twitter/follow/YourTwitterHandle?style=social)](https://twitter.com/YourTwitterHandle)
 
 ## 🌟 Features
 
@@ -33,82 +36,16 @@ A premium Discord bot designed for developer communities, featuring advanced cod
 - Custom ticket forms
 
 ### Enterprise Tier ($29.99/month)
-- Custom AI model training
-- Unlimited code reviews
-- Priority support
-- API access
+- All Team features
+- Dedicated support
 - Custom integrations
-- Advanced analytics
+- SLA guarantees
 
-## 🚀 Quick Start
+## 📥 Invite IndieGO Bot
+Click [here](https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot) to invite IndieGO Bot to your server.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Drago-03/IndieGo.git
-   cd IndieGo
-   ```
+## 📊 Server Count
+IndieGO Bot is currently in [![Servers](https://img.shields.io/badge/dynamic/json?color=blue&label=servers&query=server_count&url=https://api.example.com/bot/stats)](https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot) servers.
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Configure environment:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your tokens
-   ```
-
-4. Run tests:
-   ```bash
-   pytest tests/
-   ```
-
-5. Start the bot:
-   ```bash
-   python src/main.py
-   ```
-
-### Invite the Bot
-- [Standard Invitation](https://indiegos.netlify.app/invite)
-- [Linked Roles Setup](https://indiegos.netlify.app/verify)
-
-## 📚 Documentation
-
-- [Installation Guide](wiki/Installation.md)
-- [Configuration](wiki/Configuration.md)
-- [Usage Guide](wiki/Usage.md)
-- [API Documentation](wiki/API.md)
-- [Premium Features](wiki/Premium-Features.md)
-- [Contributing Guide](wiki/Contributing.md)
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [discord.py](https://github.com/Rapptz/discord.py)
-- [OpenAI](https://openai.com/)
-- [Gemini AI](https://gemini.google.com/app)
-- All our contributors and supporters
-
-## 📞 Support
-
-- [Discord Server](https://discord.gg/9bPsjgnJ5v)
-- [GitHub Issues](https://github.com/Drago-03/IndieGo/issues)
-- [Email Support](mailto:mantejarora@gmail.com)
-
-## 🔒 Security
-
-Found a security vulnerability? Please report it privately via [our security policy](SECURITY.md).
+## 🐦 Follow Us on Twitter
+Stay updated with the latest news and updates by following us on [Twitter](https://twitter.com/YourTwitterHandle).
