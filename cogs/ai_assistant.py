@@ -1,22 +1,14 @@
 import discord
 from discord.ext import commands
-import openai
-import anthropic
-import google.generativeai as genai
+from transformers import AutoTokenizer, AutoModelForCausalLM
 import os
-import random
 from discord import app_commands
-import asyncio
 from dotenv import load_dotenv
-import json
-
-from config import INSTALL_URL
 
 load_dotenv()
 
 # Bot Configuration
 TOKEN = os.getenv('DISCORD_TOKEN')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 PREFIX = '.'
 TICKET_CATEGORY_ID = None
 STAFF_ROLE_ID = None
@@ -37,48 +29,74 @@ EMBED_COLOR = 0x9F7AEA  # Purple
 class AIAssistant(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # Initialize AI clients
-        openai.api_key = os.getenv('OPENAI_API_KEY')
-        self.claude = anthropic.Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
-        genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-        self.gemini = genai.GenerativeModel('gemini-pro')
+        self.tokenizer = AutoTokenizer.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
+        self.model = AutoModelForCausalLM.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
 
-    async def get_openai_response(self, prompt, system_prompt):
-        try:
-            response = await openai.ChatCompletion.acreate(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": prompt}
-                ]
-            )
-            return response.choices[0].message.content
-        except Exception as e:
-            return f"An error occurred: {str(e)}"
+    async def generate_response(self, prompt):
+        inputs = self.tokenizer(prompt, return_tensors="pt")
+        outputs = self.model.generate(inputs.input_ids, max_length=150)
+        response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return response
 
     @commands.command(name="ask")
     async def ask_command(self, ctx, *, question: str):
         """Ask a general question to the AI assistant"""
-        answer = await self.get_openai_response(question, "You are a helpful assistant.")
+        answer = await self.generate_response(question)
         await ctx.send(answer)
 
     @app_commands.command(name="ask", description="Ask a general question to the AI assistant")
     async def ask(self, interaction: discord.Interaction, question: str):
         """Ask a general question to the AI assistant"""
-        answer = await self.get_openai_response(question, "You are a helpful assistant.")
+        answer = await self.generate_response(question)
         await interaction.response.send_message(answer)
 
     @commands.command(name="codehelp")
     async def codehelp_command(self, ctx, *, code: str):
-        """Get coding help using multiple AI models"""
-        help_response = await self.get_openai_response(code, "You are a helpful coding assistant.")
+        """Get coding help using the AI assistant"""
+        help_response = await self.generate_response(code)
         await ctx.send(help_response)
 
-    @app_commands.command(name="codehelp", description="Get coding help using multiple AI models")
+    @app_commands.command(name="codehelp", description="Get coding help using the AI assistant")
     async def codehelp(self, interaction: discord.Interaction, code: str):
-        """Get coding help using multiple AI models"""
-        help_response = await self.get_openai_response(code, "You are a helpful coding assistant.")
+        """Get coding help using the AI assistant"""
+        help_response = await self.generate_response(code)
         await interaction.response.send_message(help_response)
+
+    @commands.command(name="explain")
+    async def explain_command(self, ctx, *, code: str):
+        """Explain code in simple terms"""
+        explanation = await self.generate_response(f"Explain the following code in simple terms:\n{code}")
+        await ctx.send(explanation)
+
+    @app_commands.command(name="explain", description="Explain code in simple terms")
+    async def explain(self, interaction: discord.Interaction, code: str):
+        """Explain code in simple terms"""
+        explanation = await self.generate_response(f"Explain the following code in simple terms:\n{code}")
+        await interaction.response.send_message(explanation)
+
+    @commands.command(name="debug")
+    async def debug_command(self, ctx, *, code: str):
+        """Help debug code issues"""
+        debug_response = await self.generate_response(f"Debug the following code:\n{code}")
+        await ctx.send(debug_response)
+
+    @app_commands.command(name="debug", description="Help debug code issues")
+    async def debug(self, interaction: discord.Interaction, code: str):
+        """Help debug code issues"""
+        debug_response = await self.generate_response(f"Debug the following code:\n{code}")
+        await interaction.response.send_message(debug_response)
+
+    @commands.command(name="optimize")
+    async def optimize_command(self, ctx, *, code: str):
+        """Suggest code optimizations"""
+        optimization = await self.generate_response(f"Optimize the following code:\n{code}")
+        await ctx.send(optimization)
+
+    @app_commands.command(name="optimize", description="Suggest code optimizations")
+    async def optimize(self, interaction: discord.Interaction, code: str):
+        """Suggest code optimizations"""
+        optimization = await self.generate_response(f"Optimize the following code:\n{code}")
+        await interaction.response.send_message(optimization)
 
 async def setup(bot):
     await bot.add_cog(AIAssistant(bot))

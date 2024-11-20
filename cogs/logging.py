@@ -4,6 +4,8 @@ from discord import app_commands
 import json
 
 class Logging(commands.Cog):
+    """Cog for logging actions and errors"""
+
     def __init__(self, bot):
         self.bot = bot
         self.log_category = None
@@ -25,6 +27,17 @@ class Logging(commands.Cog):
                 self.log_channels[name] = channel
             except Exception as e:
                 print(f"Failed to create or get channel {name}: {e}")
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        log_channel = discord.utils.get(ctx.guild.text_channels, name="mod-logs")
+        if log_channel:
+            await log_channel.send(f"Error: {error}")
+
+    async def log_action(self, guild, action):
+        log_channel = discord.utils.get(guild.text_channels, name="mod-logs")
+        if log_channel:
+            await log_channel.send(action)
 
     async def is_premium(self, user_id):
         # Check if the user has a premium subscription
