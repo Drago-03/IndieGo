@@ -4,12 +4,12 @@
 
 [[redirects]]
   from = "/invite"
-  to = "https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands"
+  to = "https://discord.com/oauth2/authorize?client_id=1304755116255088670"
   status = 302
 
 [[redirects]]
   from = "/discord"
-  to = "https://discord.gg/your-invite"
+  to = "https://discord.gg/9bPsjgnJ5v"
   status = 302
 
 [[redirects]]

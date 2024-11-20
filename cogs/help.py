@@ -95,7 +95,13 @@ class HelpDropdown(Select):
             discord.SelectOption(label="Fun", description="Fun commands"),
             discord.SelectOption(label="Admin", description="Administrative commands"),
             discord.SelectOption(label="Tickets", description="Ticket management commands"),
-            discord.SelectOption(label="AI-Developer Assistance", description="AI-powered developer assistance commands")
+            discord.SelectOption(label="AI-Developer Assistance", description="AI-powered developer assistance commands"),
+            discord.SelectOption(label="Voice Channel", description="Voice channel features"),
+            discord.SelectOption(label="OCR", description="OCR and image scanning"),
+            discord.SelectOption(label="Reddit", description="Reddit integration"),
+            discord.SelectOption(label="AutoMod", description="Advanced AutoMod features"),
+            discord.SelectOption(label="DM Interaction", description="Interact with the bot via DMs"),
+            discord.SelectOption(label="Logging", description="Log actions and errors")
         ]
         super().__init__(placeholder="Choose a category...", min_values=1, max_values=1, options=options)
 
@@ -168,6 +174,45 @@ class HelpDropdown(Select):
                 name="Commands",
                 value="ask - Ask a general question to the AI assistant\n"
                       "codehelp - Get coding help using multiple AI models",
+                inline=False
+            )
+        elif category == "Voice Channel":
+            embed.add_field(
+                name="Commands",
+                value="join - Join a voice channel\n"
+                      "leave - Leave a voice channel\n"
+                      "play - Play a sound from a URL\n"
+                      "record - Record voice and convert to text",
+                inline=False
+            )
+        elif category == "OCR":
+            embed.add_field(
+                name="Commands",
+                value="scan - Scan an image for text",
+                inline=False
+            )
+        elif category == "Reddit":
+            embed.add_field(
+                name="Commands",
+                value="meme - Fetch a programming meme from Reddit",
+                inline=False
+            )
+        elif category == "AutoMod":
+            embed.add_field(
+                name="Commands",
+                value="warn - Warn a member",
+                inline=False
+            )
+        elif category == "DM Interaction":
+            embed.add_field(
+                name="Commands",
+                value="update - Send updates to users",
+                inline=False
+            )
+        elif category == "Logging":
+            embed.add_field(
+                name="Commands",
+                value="initialize_logs - Setup logging channels",
                 inline=False
             )
         await interaction.response.edit_message(embed=embed, view=self.view)

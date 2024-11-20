@@ -6,6 +6,17 @@ class Moderation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    async def dm_user(self, user, action, reason, moderator):
+        try:
+            await user.send(f"You have been {action} by {moderator}.\nReason: {reason}")
+        except discord.Forbidden:
+            pass
+
+    async def log_action(self, guild, action):
+        log_channel = discord.utils.get(guild.text_channels, name="mod-logs")
+        if log_channel:
+            await log_channel.send(action)
+
     @commands.command(name="kick")
     @commands.has_permissions(kick_members=True)
     async def kick_command(self, ctx, member: discord.Member = None, *, reason: str = None):
@@ -19,6 +30,8 @@ class Moderation(commands.Cog):
             return
 
         await member.kick(reason=reason)
+        await self.dm_user(member, "kicked", reason, ctx.author)
+        await self.log_action(ctx.guild, f"{ctx.author} kicked {member}.\nReason: {reason}")
         embed = discord.Embed(
             title="Member Kicked",
             description=f'{member.name} has been kicked. Reason: {reason}',
@@ -39,6 +52,8 @@ class Moderation(commands.Cog):
             return
 
         await member.kick(reason=reason)
+        await self.dm_user(member, "kicked", reason, interaction.user)
+        await self.log_action(interaction.guild, f"{interaction.user} kicked {member}.\nReason: {reason}")
         embed = discord.Embed(
             title="Member Kicked",
             description=f'{member.name} has been kicked. Reason: {reason}',
@@ -59,6 +74,8 @@ class Moderation(commands.Cog):
             return
 
         await member.ban(reason=reason)
+        await self.dm_user(member, "banned", reason, ctx.author)
+        await self.log_action(ctx.guild, f"{ctx.author} banned {member}.\nReason: {reason}")
         embed = discord.Embed(
             title="Member Banned",
             description=f'{member.name} has been banned. Reason: {reason}',
@@ -79,6 +96,8 @@ class Moderation(commands.Cog):
             return
 
         await member.ban(reason=reason)
+        await self.dm_user(member, "banned", reason, interaction.user)
+        await self.log_action(interaction.guild, f"{interaction.user} banned {member}.\nReason: {reason}")
         embed = discord.Embed(
             title="Member Banned",
             description=f'{member.name} has been banned. Reason: {reason}',
@@ -98,26 +117,20 @@ class Moderation(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        muted_role = discord.utils.get(ctx.guild.roles, name="Muted")
-        if not muted_role:
-            muted_role = await ctx.guild.create_role(name="Muted")
-            for channel in ctx.guild.channels:
-                await channel.set_permissions(muted_role, speak=False, send_messages=False)
-        
-        if muted_role in member.roles:
-            embed = discord.Embed(
-                title="Error",
-                description=f'{member.name} is already muted.',
-                color=discord.Color.red()
-            )
-            await ctx.send(embed=embed)
-            return
+        mute_role = discord.utils.get(ctx.guild.roles, name="Muted")
+        if not mute_role:
+            mute_role = await ctx.guild.create_role(name="Muted")
 
-        await member.add_roles(muted_role)
+            for channel in ctx.guild.channels:
+                await channel.set_permissions(mute_role, speak=False, send_messages=False, read_message_history=True, read_messages=False)
+
+        await member.add_roles(mute_role, reason=reason)
+        await self.dm_user(member, "muted", reason, ctx.author)
+        await self.log_action(ctx.guild, f"{ctx.author} muted {member}.\nReason: {reason}")
         embed = discord.Embed(
             title="Member Muted",
             description=f'{member.name} has been muted. Reason: {reason}',
-            color=discord.Color.purple()
+            color=discord.Color.orange()
         )
         await ctx.send(embed=embed)
 
@@ -141,6 +154,8 @@ class Moderation(commands.Cog):
                 await channel.set_permissions(mute_role, speak=False, send_messages=False, read_message_history=True, read_messages=False)
 
         await member.add_roles(mute_role, reason=reason)
+        await self.dm_user(member, "muted", reason, interaction.user)
+        await self.log_action(interaction.guild, f"{interaction.user} muted {member}.\nReason: {reason}")
         embed = discord.Embed(
             title="Member Muted",
             description=f'{member.name} has been muted. Reason: {reason}',
@@ -160,32 +175,24 @@ class Moderation(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        muted_role = discord.utils.get(ctx.guild.roles, name="Muted")
-        if not muted_role:
+        mute_role = discord.utils.get(ctx.guild.roles, name="Muted")
+        if mute_role in member.roles:
+            await member.remove_roles(mute_role)
+            await self.dm_user(member, "unmuted", reason, ctx.author)
+            await self.log_action(ctx.guild, f"{ctx.author} unmuted {member}.\nReason: {reason}")
             embed = discord.Embed(
-                title="Error",
-                description="Muted role does not exist.",
-                color=discord.Color.red()
+                title="Member Unmuted",
+                description=f'{member.name} has been unmuted. Reason: {reason}',
+                color=discord.Color.green()
             )
             await ctx.send(embed=embed)
-            return
-
-        if muted_role not in member.roles:
+        else:
             embed = discord.Embed(
                 title="Error",
                 description=f'{member.name} is not muted.',
                 color=discord.Color.red()
             )
             await ctx.send(embed=embed)
-            return
-
-        await member.remove_roles(muted_role)
-        embed = discord.Embed(
-            title="Member Unmuted",
-            description=f'{member.name} has been unmuted. Reason: {reason}',
-            color=discord.Color.green()
-        )
-        await ctx.send(embed=embed)
 
     @app_commands.command(name="unmute", description="Unmute a member")
     @commands.has_permissions(manage_roles=True)
@@ -202,6 +209,8 @@ class Moderation(commands.Cog):
         mute_role = discord.utils.get(interaction.guild.roles, name="Muted")
         if mute_role in member.roles:
             await member.remove_roles(mute_role)
+            await self.dm_user(member, "unmuted", None, interaction.user)
+            await self.log_action(interaction.guild, f"{interaction.user} unmuted {member}.")
             embed = discord.Embed(
                 title="Member Unmuted",
                 description=f'{member.name} has been unmuted.',

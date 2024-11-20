@@ -9,8 +9,8 @@ A premium Discord bot designed for developer communities, featuring advanced cod
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![Code Style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 [![Author](https://img.shields.io/badge/author-Drago-purple)](https://github.com/Drago-03)
-[![Servers](https://img.shields.io/badge/dynamic/json?color=blue&label=servers&query=server_count&url=https://api.example.com/bot/stats)](https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot)
-[![Invite](https://img.shields.io/badge/invite-IndieGO-green)](https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot)
+[![Servers](https://img.shields.io/badge/dynamic/json?color=blue&label=servers&query=server_count&url=https://api.example.com/bot/stats)]((https://discord.com/oauth2/authorize?client_id=1304755116255088670)
+[![Invite](https://img.shields.io/badge/invite-IndieGO-green)](https://discord.com/oauth2/authorize?client_id=1304755116255088670)
 [![Twitter](https://img.shields.io/twitter/follow/YourTwitterHandle?style=social)](https://twitter.com/YourTwitterHandle)
 
 ## 🌟 Features

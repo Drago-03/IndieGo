@@ -29,7 +29,12 @@ initial_extensions = [
     'cogs.coding_help',
     'cogs.help',
     'cogs.base',
-    'cogs.errors'
+    'cogs.errors',
+    'cogs.automod',
+    'cogs.dm_interaction',
+    'cogs.voice_channel',
+    'cogs.ocr',
+    'cogs.reddit'
 ]
 
 BOT_WEBSITE = "https://drago-03.github.io/IndieGo-Website/"

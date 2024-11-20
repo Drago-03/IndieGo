@@ -17,7 +17,7 @@ INTERACTIONS_URL = f"{BOT_WEBSITE}/api/interactions"
 LINKED_ROLES_URL = f"{BOT_WEBSITE}/api/linked-roles"
 TERMS_URL = f"{BOT_WEBSITE}/terms"
 PRIVACY_URL = f"{BOT_WEBSITE}/privacy"
-INSTALL_URL = f"https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands"
+INSTALL_URL = f"https://discord.com/oauth2/authorize?client_id=1304755116255088670"
 OAUTH2_URL = f"https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&redirect_uri={BOT_WEBSITE}/callback&response_type=code&scope=identify%20guilds"
 
 # Branding
