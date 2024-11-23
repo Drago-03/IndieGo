@@ -6,7 +6,7 @@ A premium Discord bot designed for developer communities, featuring advanced cod
 
 [![Discord](https://img.shields.io/discord/1292805470117171231)](https://discord.gg/9bPsjgnJ5v)
 [![License](https://img.shields.io/badge/license-Boost%201.0-lightgrey)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/downloads/)
 [![Code Style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 [![Author](https://img.shields.io/badge/author-Drago-purple)](https://github.com/Drago-03)
 [![Servers](https://img.shields.io/badge/dynamic/json?color=blue&label=servers&query=server_count&url=https://api.example.com/bot/stats)](https://discord.gg/9bPsjgnJ5v)
