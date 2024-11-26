@@ -63,7 +63,7 @@ def home():
     return "IndieGO Bot is running!"
 
 def run():
-    app.run(host='0.0.0.0', port=8081)
+    app.run(host='0.0.0.0', port=5051)
 
 def keep_alive():
     t = Thread(target=run)
