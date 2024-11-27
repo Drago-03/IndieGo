@@ -1,48 +1,63 @@
-import discord
+from flask import Flask
+from threading import Thread
+from dotenv import load_dotenv
 from discord.ext import commands
+import discord
 import os
-from config import DISCORD_BOT_TOKEN, validate_discord_keys
+import aiosqlite
 
-class IndieGOBot(commands.Bot):
-    def __init__(self):
-        intents = discord.Intents.default()
-        intents.message_content = True
-        intents.members = True
-        super().__init__(command_prefix='!', intents=intents)
-        
-        # Define initial extensions here
-        self.initial_extensions = [
-            'cogs.general',
-            'cogs.tickets',
-            'cogs.admin'
-        ]
+from config import INSTALL_URL
 
-    async def setup_hook(self):
-        # Load extensions
-        for extension in self.initial_extensions:
-            try:
-                await self.load_extension(extension)
-            except Exception as e:
-                print(f'Failed to load extension {extension}: {e}')
+# Load environment variables from .env file
+load_dotenv()
 
-    async def on_ready(self):
-        print(f'Logged in as {self.user.name}')
-        print('------')
+# Bot configuration
+TOKEN = os.getenv('DISCORD_TOKEN')
+PREFIX = '.'
+intents = discord.Intents.default()
+intents.message_content = True
+intents.members = True
 
-def main():
-    try:
-        # Validate all required keys before starting
-        validate_discord_keys()
-        
-        # Create and start the bot
-        bot = IndieGOBot()
-        bot.run(DISCORD_BOT_TOKEN)
-    except ValueError as e:
-        print(f"Configuration Error: {e}")
-        exit(1)
-    except Exception as e:
-        print(f"Startup Error: {e}")
-        exit(1)
+bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
-if __name__ == '__main__':
-    main() 
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user}')
+    bot.db = await aiosqlite.connect('data/messages.db')
+
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+    async with bot.db.execute('INSERT INTO messages (user_id, message) VALUES (?, ?)', (message.author.id, message.content)):
+        await bot.db.commit()
+    await bot.process_commands(message)
+
+# Load cogs
+async def load_cogs():
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            await bot.load_extension(f'cogs.{filename[:-3]}')
+
+# Flask web server to keep the bot running
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Discord bot is running!"
+
+def run():
+    app.run(host='0.0.0.0', port=8080)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
+if __name__ == "__main__":
+    keep_alive()
+    bot.loop.create_task(load_cogs())
+    bot.run(TOKEN)
+
+@bot.event
+async def on_close():
+    await bot.db.close()
