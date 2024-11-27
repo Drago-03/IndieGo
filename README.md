@@ -11,7 +11,7 @@ A premium Discord bot designed for developer communities, featuring advanced cod
 [![Author](https://img.shields.io/badge/author-Drago-purple)](https://github.com/Drago-03)
 [![Servers](https://img.shields.io/badge/dynamic/json?color=blue&label=servers&query=server_count&url=https://api.example.com/bot/stats)](https://discord.gg/9bPsjgnJ5v)
 [![Invite](https://img.shields.io/badge/invite-IndieGO-green)](https://discord.com/oauth2/authorize?client_id=1304755116255088670)
-[![Twitter](https://img.shields.io/twitter/follow/YourTwitterHandle?style=social)](https://twitter.com/YourTwitterHandle)
+[![Twitter](https://img.shields.io/twitter/follow/YourTwitterHandle?style=social)](https://twitter.com/_gear_head_03_)
 
 ## 🌟 Features
 
