@@ -55,4 +55,4 @@ IndieGO Bot is currently in [![Servers](https://img.shields.io/badge/dynamic/jso
 
 ## 🐦 Follow Us on Twitter
 
-Stay updated with the latest news and updates by following us on [Twitter](https://twitter.com/YourTwitterHandle).
+Stay updated with the latest news and updates by following us on [Twitter](https://twitter.com/_gear_head_03_).
