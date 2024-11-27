@@ -6,8 +6,6 @@ import discord
 import os
 import aiosqlite
 
-from config import INSTALL_URL
-
 # Load environment variables from .env file
 load_dotenv()
 
