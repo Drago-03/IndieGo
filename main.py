@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 import discord
 import os
+import aiosqlite
 
 from config import INSTALL_URL
 
@@ -22,6 +23,15 @@ bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
+    bot.db = await aiosqlite.connect('data/messages.db')
+
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+    async with bot.db.execute('INSERT INTO messages (user_id, message) VALUES (?, ?)', (message.author.id, message.content)):
+        await bot.db.commit()
+    await bot.process_commands(message)
 
 # Load cogs
 async def load_cogs():
@@ -47,3 +57,7 @@ if __name__ == "__main__":
     keep_alive()
     bot.loop.create_task(load_cogs())
     bot.run(TOKEN)
+
+@bot.event
+async def on_close():
+    await bot.db.close()
