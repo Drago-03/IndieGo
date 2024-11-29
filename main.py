@@ -18,6 +18,8 @@ intents.members = True
 
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
+SPONSORS = [1234567890, 9876543210]  # List of sponsor user IDs
+
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
@@ -27,6 +29,10 @@ async def on_ready():
 async def on_message(message):
     if message.author.bot:
         return
+
+    if message.author.id in SPONSORS:
+        await message.channel.send(f"Thank you for sponsoring, {message.author.mention}!")
+
     async with bot.db.execute('INSERT INTO messages (user_id, message) VALUES (?, ?)', (message.author.id, message.content)):
         await bot.db.commit()
     await bot.process_commands(message)
