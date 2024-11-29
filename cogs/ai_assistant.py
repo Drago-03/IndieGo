@@ -1,102 +1,157 @@
 import discord
 from discord.ext import commands
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import os
 from discord import app_commands
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# Bot Configuration
-TOKEN = os.getenv('DISCORD_TOKEN')
-PREFIX = '.'
-TICKET_CATEGORY_ID = None
-STAFF_ROLE_ID = None
-LOG_CHANNEL_ID = 1308525133048188949
-
-# URLs and Endpoints
-BOT_WEBSITE = "https://drago-03.github.io/IndieGo-Website/"
-INTERACTIONS_URL = f"{BOT_WEBSITE}/api/interactions"
-LINKED_ROLES_URL = f"{BOT_WEBSITE}/api/linked-roles"
-TERMS_URL = f"{BOT_WEBSITE}/terms"
-PRIVACY_URL = f"{BOT_WEBSITE}/privacy"
-INSTALL_URL = f"https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands"
-OAUTH2_URL = f"https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&redirect_uri={BOT_WEBSITE}/callback&response_type=code&scope=identify%20guilds"
-
-# Branding
-EMBED_COLOR = 0x9F7AEA  # Purple
+import openai
+import anthropic
+import google.generativeai as genai
+import os
+from typing import Optional
+import asyncio
+import aiohttp
+from datetime import datetime, timedelta
+import json
 
 class AIAssistant(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.tokenizer = AutoTokenizer.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
-        self.model = AutoModelForCausalLM.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
+        # Initialize API keys from environment variables
+        self.openai_api_key = os.getenv('OPENAI_API_KEY')
+        self.anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
+        self.google_api_key = os.getenv('GOOGLE_API_KEY')
+        
+        # Initialize API clients
+        if self.openai_api_key:
+            openai.api_key = self.openai_api_key
+        if self.anthropic_api_key:
+            self.claude = anthropic.Client(api_key=self.anthropic_api_key)
+        if self.google_api_key:
+            genai.configure(api_key=self.google_api_key)
+        
+        # Rate limiting
+        self.cooldowns = {}
+        self.COOLDOWN_MINUTES = 1
+        
+        # Message history
+        self.conversation_history = {}
 
-    async def generate_response(self, prompt):
-        inputs = self.tokenizer(prompt, return_tensors="pt")
-        outputs = self.model.generate(inputs.input_ids, max_length=150)
-        response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return response
+    async def get_ai_response(self, prompt: str, user_id: str, model: str = "gpt-3.5-turbo") -> str:
+        """Generate AI response using available models"""
+        try:
+            # Check cooldown
+            if not await self.check_cooldown(user_id):
+                return "Please wait a moment before making another request."
 
-    @commands.command(name="ask")
-    async def ask_command(self, ctx, *, question: str):
+            # Handle different AI services
+            if self.openai_api_key and model.startswith("gpt"):
+                response = await self.get_openai_response(prompt)
+            elif self.anthropic_api_key and model == "claude":
+                response = await self.get_claude_response(prompt)
+            elif self.google_api_key and model == "gemini":
+                response = await self.get_gemini_response(prompt)
+            else:
+                response = "No AI service is currently available."
+
+            return response
+
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+
+    async def get_openai_response(self, prompt: str) -> str:
+        """Get response from OpenAI's GPT"""
+        try:
+            response = await asyncio.to_thread(
+                openai.ChatCompletion.create,
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            return f"OpenAI Error: {str(e)}"
+
+    async def get_claude_response(self, prompt: str) -> str:
+        """Get response from Anthropic's Claude"""
+        try:
+            response = await asyncio.to_thread(
+                self.claude.messages.create,
+                model="claude-3-sonnet-20240229",
+                max_tokens=1024,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return response.content[0].text
+        except Exception as e:
+            return f"Claude Error: {str(e)}"
+
+    async def get_gemini_response(self, prompt: str) -> str:
+        """Get response from Google's Gemini"""
+        try:
+            model = genai.GenerativeModel('gemini-pro')
+            response = await asyncio.to_thread(
+                model.generate_content,
+                prompt
+            )
+            return response.text
+        except Exception as e:
+            return f"Gemini Error: {str(e)}"
+
+    async def check_cooldown(self, user_id: str) -> bool:
+        """Check if user is on cooldown"""
+        if user_id in self.cooldowns:
+            if datetime.now() < self.cooldowns[user_id]:
+                return False
+        self.cooldowns[user_id] = datetime.now() + timedelta(minutes=self.COOLDOWN_MINUTES)
+        return True
+
+    @app_commands.command(name="ask", description="Ask a question to the AI assistant")
+    async def ask(self, interaction: discord.Interaction, question: str, model: Optional[str] = "gpt-3.5-turbo"):
         """Ask a general question to the AI assistant"""
-        answer = await self.generate_response(question)
-        await ctx.send(answer)
+        await interaction.response.defer()
+        answer = await self.get_ai_response(question, str(interaction.user.id), model)
+        
+        embed = discord.Embed(
+            title="AI Assistant Response",
+            description=answer,
+            color=discord.Color.blue(),
+            timestamp=datetime.now()
+        )
+        embed.set_footer(text=f"Requested by {interaction.user.name} | Model: {model}")
+        
+        await interaction.followup.send(embed=embed)
 
-    @app_commands.command(name="ask", description="Ask a general question to the AI assistant")
-    async def ask(self, interaction: discord.Interaction, question: str):
-        """Ask a general question to the AI assistant"""
-        answer = await self.generate_response(question)
-        await interaction.response.send_message(answer)
-
-    @commands.command(name="codehelp")
-    async def codehelp_command(self, ctx, *, code: str):
-        """Get coding help using the AI assistant"""
-        help_response = await self.generate_response(code)
-        await ctx.send(help_response)
-
-    @app_commands.command(name="codehelp", description="Get coding help using the AI assistant")
-    async def codehelp(self, interaction: discord.Interaction, code: str):
-        """Get coding help using the AI assistant"""
-        help_response = await self.generate_response(code)
-        await interaction.response.send_message(help_response)
-
-    @commands.command(name="explain")
-    async def explain_command(self, ctx, *, code: str):
-        """Explain code in simple terms"""
-        explanation = await self.generate_response(f"Explain the following code in simple terms:\n{code}")
-        await ctx.send(explanation)
+    @app_commands.command(name="codehelp", description="Get coding help")
+    async def codehelp(self, interaction: discord.Interaction, code: str, language: Optional[str] = None):
+        """Get coding help from the AI assistant"""
+        await interaction.response.defer()
+        
+        prompt = f"Please help with this code in {language if language else 'any language'}:\n```\n{code}\n```"
+        response = await self.get_ai_response(prompt, str(interaction.user.id))
+        
+        embed = discord.Embed(
+            title="Code Help",
+            description=response,
+            color=discord.Color.green(),
+            timestamp=datetime.now()
+        )
+        embed.set_footer(text=f"Requested by {interaction.user.name}")
+        
+        await interaction.followup.send(embed=embed)
 
     @app_commands.command(name="explain", description="Explain code in simple terms")
     async def explain(self, interaction: discord.Interaction, code: str):
         """Explain code in simple terms"""
-        explanation = await self.generate_response(f"Explain the following code in simple terms:\n{code}")
-        await interaction.response.send_message(explanation)
-
-    @commands.command(name="debug")
-    async def debug_command(self, ctx, *, code: str):
-        """Help debug code issues"""
-        debug_response = await self.generate_response(f"Debug the following code:\n{code}")
-        await ctx.send(debug_response)
-
-    @app_commands.command(name="debug", description="Help debug code issues")
-    async def debug(self, interaction: discord.Interaction, code: str):
-        """Help debug code issues"""
-        debug_response = await self.generate_response(f"Debug the following code:\n{code}")
-        await interaction.response.send_message(debug_response)
-
-    @commands.command(name="optimize")
-    async def optimize_command(self, ctx, *, code: str):
-        """Suggest code optimizations"""
-        optimization = await self.generate_response(f"Optimize the following code:\n{code}")
-        await ctx.send(optimization)
-
-    @app_commands.command(name="optimize", description="Suggest code optimizations")
-    async def optimize(self, interaction: discord.Interaction, code: str):
-        """Suggest code optimizations"""
-        optimization = await self.generate_response(f"Optimize the following code:\n{code}")
-        await interaction.response.send_message(optimization)
+        await interaction.response.defer()
+        
+        prompt = f"Explain this code in simple terms:\n```\n{code}\n```"
+        explanation = await self.get_ai_response(prompt, str(interaction.user.id))
+        
+        embed = discord.Embed(
+            title="Code Explanation",
+            description=explanation,
+            color=discord.Color.purple(),
+            timestamp=datetime.now()
+        )
+        embed.set_footer(text=f"Requested by {interaction.user.name}")
+        
+        await interaction.followup.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(AIAssistant(bot))

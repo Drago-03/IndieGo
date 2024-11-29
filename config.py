@@ -6,7 +6,7 @@ load_dotenv()
 # Bot Configuration
 TOKEN = os.getenv('DISCORD_TOKEN')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-PREFIX = '!'
+PREFIX = '.'
 TICKET_CATEGORY_ID = None
 STAFF_ROLE_ID = None
 LOG_CHANNEL_ID = 1308525133048188949
