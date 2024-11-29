@@ -89,24 +89,6 @@ async def on_error(event, *args, **kwargs):
     logger.error(f'Error in event {event}:')
     logger.error(traceback.format_exc())
 
-# Example slash command with error handling
-@bot.tree.command(name="help", description="Show bot help and commands")
-async def help(interaction: discord.Interaction):
-    try:
-        embed = discord.Embed(
-            title="IndieGO Bot Help",
-            description="Here are my available commands:",
-            color=discord.Color.blue()
-        )
-        await interaction.response.send_message(embed=embed)
-    except Exception as e:
-        logger.error(f'Error in help command: {str(e)}')
-        logger.error(traceback.format_exc())
-        await interaction.response.send_message(
-            "An error occurred while processing your request.",
-            ephemeral=True
-        )
-
 async def main():
     try:
         logger.info('Starting bot...')

@@ -215,7 +215,7 @@ class HelpDropdown(Select):
                 value="initialize_logs - Setup logging channels",
                 inline=False
             )
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.edit_message(embed=embed, view=self.view)
 
 async def setup(bot):
     await bot.add_cog(Help(bot))
