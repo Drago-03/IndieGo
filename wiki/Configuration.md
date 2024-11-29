@@ -83,6 +83,7 @@ Configures command settings:
 Required permissions integer: `8`
 
 Includes:
+
 - Manage Messages
 - Manage Channels
 - View Channels
@@ -95,6 +96,7 @@ Includes:
 ### Intents
 
 Required intents:
+
 - Message Content
 - Guild Members
 - Guild Messages
@@ -105,6 +107,7 @@ Required intents:
 Default SQLite database location: `data/subscriptions.db`
 
 Custom location:
+
 ```python
 subscription = Subscription(db_path="custom/path/to/db.sqlite")
 ```
