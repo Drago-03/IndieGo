@@ -5,6 +5,7 @@ from discord.ext import commands
 import discord
 import os
 import aiosqlite
+import asyncio
 
 # Load environment variables from .env file
 load_dotenv()
@@ -57,11 +58,10 @@ def keep_alive():
     t = Thread(target=run)
     t.start()
 
-if __name__ == "__main__":
+async def main():
     keep_alive()
-    bot.loop.create_task(load_cogs())
-    bot.run(TOKEN)
+    await load_cogs()
+    await bot.start(TOKEN)
 
-@bot.event
-async def on_close():
-    await bot.db.close()
+if __name__ == "__main__":
+    asyncio.run(main())
