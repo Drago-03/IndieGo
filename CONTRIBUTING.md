@@ -43,12 +43,14 @@ This project and everyone participating in it is governed by our [Code of Conduc
 ## Development Setup
 
 1. Clone your fork:
+
    ```bash
    git clone https://github.com/your-username/devassist-bot.git
    cd devassist-bot
    ```
 
 2. Create virtual environment:
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # Linux/macOS
@@ -56,12 +58,14 @@ This project and everyone participating in it is governed by our [Code of Conduc
    ```
 
 3. Install dependencies:
+
    ```bash
    pip install -r requirements.txt
    pip install -r requirements-dev.txt
    ```
 
 4. Set up pre-commit hooks:
+
    ```bash
    pre-commit install
    ```
@@ -114,6 +118,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 ## Recognition
 
 Contributors will be:
+
 - Listed in CONTRIBUTORS.md
 - Mentioned in release notes
 - Given special Discord roles

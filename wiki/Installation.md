@@ -14,11 +14,13 @@ This guide provides detailed instructions for setting up the DevAssist Discord b
 ### 1. System Requirements
 
 #### Windows
+
 - Install Python from [python.org](https://python.org)
 - Add Python to PATH during installation
 - Install Git from [git-scm.com](https://git-scm.com)
 
 #### Linux/macOS
+
 ```bash
 # Ubuntu/Debian
 sudo apt update
@@ -57,11 +59,13 @@ pip install -r requirements.txt
 ### 5. Configuration
 
 1. Copy example environment file:
+
    ```bash
    cp .env.example .env
    ```
 
 2. Edit `.env` with your credentials:
+
    ```env
    DISCORD_TOKEN=your_discord_token_here
    OPENAI_API_KEY=your_openai_api_key_here
@@ -97,6 +101,7 @@ python src/main.py
 1. **ModuleNotFoundError**
    - Ensure virtual environment is activated
    - Verify all dependencies are installed
+
    ```bash
    pip install -r requirements.txt --upgrade
    ```
@@ -108,6 +113,7 @@ python src/main.py
 3. **Database Errors**
    - Delete existing database file
    - Run initialization script again
+
    ```bash
    rm data/subscriptions.db
    python scripts/init_db.py
