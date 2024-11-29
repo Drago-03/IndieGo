@@ -3,7 +3,6 @@ from discord.ext import commands
 from typing import Optional
 import json
 import os
-from models.subscription import Subscription
 
 class ProjectManagement(commands.Cog):
     """
@@ -11,7 +10,6 @@ class ProjectManagement(commands.Cog):
     """
     def __init__(self, bot):
         self.bot = bot
-        self.subscription = Subscription()
         
         # Load project templates
         with open('src/config/project_templates.json', 'r') as f:
@@ -20,18 +18,13 @@ class ProjectManagement(commands.Cog):
     @commands.command()
     async def create_project(self, ctx, name: str, template: str):
         """
-        Create a new project structure (Premium only)
+        Create a new project structure
         
         Args:
             ctx: Command context
             name (str): Project name
             template (str): Template to use
         """
-        sub = await self.subscription.get_subscription(ctx.author.id)
-        if not sub or sub['tier'] not in ['pro', 'enterprise']:
-            await ctx.send("⭐ This is a premium feature. Upgrade to Pro or Enterprise to create project structures!")
-            return
-
         if template not in self.templates:
             templates_list = "\n".join(f"• {t}" for t in self.templates.keys())
             await ctx.send(f"Invalid template. Available templates:\n{templates_list}")
@@ -65,17 +58,12 @@ class ProjectManagement(commands.Cog):
     @commands.command()
     async def estimate(self, ctx, *, requirements: str):
         """
-        Estimate project complexity and time (Premium only)
+        Estimate project complexity and time
         
         Args:
             ctx: Command context
             requirements (str): Project requirements
         """
-        sub = await self.subscription.get_subscription(ctx.author.id)
-        if not sub or sub['tier'] not in ['pro', 'enterprise']:
-            await ctx.send("⭐ This is a premium feature. Upgrade to Pro or Enterprise to access project estimation!")
-            return
-
         # Analyze requirements and generate estimate
         analysis = self._analyze_requirements(requirements)
         
