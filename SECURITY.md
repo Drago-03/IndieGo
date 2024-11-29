@@ -16,7 +16,7 @@ Last Updated: November 19, 2024
 We take security seriously at DevAssist Bot. If you discover a security vulnerability, please follow these steps:
 
 1. **DO NOT** create a public GitHub issue
-2. Email us at mantejarora@gmail.com
+2. Email me at mantejarora@gmail.com
 3. Include detailed information about the vulnerability
 4. We will acknowledge receipt within 24 hours
 5. We will provide a detailed response within 72 hours
@@ -42,9 +42,9 @@ We take security seriously at DevAssist Bot. If you discover a security vulnerab
 ## Rewards
 
 We offer rewards for responsible disclosure:
-- Critical vulnerabilities: $500
-- High severity: $200
-- Medium severity: $100
+- Critical vulnerabilities: $200
+- High severity: $100
+- Medium severity: $50
 
 ## Contact
 
