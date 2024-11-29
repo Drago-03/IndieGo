@@ -53,6 +53,6 @@ Click [here](https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope
 
 IndieGO Bot is currently in [![Servers](https://img.shields.io/badge/dynamic/json?color=blue&label=servers&query=server_count&url=https://api.example.com/bot/stats)](https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot) servers.
 
-## 🐦 Follow Us on Twitter
+## 🐦 Follow me on Twitter
 
-Stay updated with the latest news and updates by following us on [Twitter](https://twitter.com/_gear_head_03_).
+Stay updated with the latest news and updates by following me on [Twitter](https://twitter.com/_gear_head_03_).
