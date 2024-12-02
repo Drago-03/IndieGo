@@ -1,29 +1,25 @@
 import discord
 from discord.ext import commands
-import praw
-import random
-import os
+import requests
 
 class Reddit(commands.Cog):
     """Cog for Reddit integration"""
 
     def __init__(self, bot):
         self.bot = bot
-        self.reddit = praw.Reddit(
-            client_id=os.getenv('REDDIT_CLIENT_ID'),
-            client_secret=os.getenv('REDDIT_CLIENT_SECRET'),
-            user_agent="discord:indiego_bot:v1.0 (by u/your_reddit_username)"
-        )
 
     @commands.command(name="meme")
     async def meme_command(self, ctx):
         """Fetch a programming meme from Reddit"""
-        subreddit = self.reddit.subreddit("ProgrammerHumor")
-        posts = [post for post in subreddit.hot(limit=50) if not post.stickied]
-        post = random.choice(posts)
-        embed = discord.Embed(title=post.title, url=post.url)
-        embed.set_image(url=post.url)
-        await ctx.send(embed=embed)
+        response = requests.get("https://meme-api.com/gimme/ProgrammerHumor")
+        if response.status_code == 200:
+            data = response.json()
+            embed = discord.Embed(title=data['title'], url=data['postLink'], color=discord.Color.blue())
+            embed.set_image(url=data['url'])
+            embed.set_footer(text=f"👍 {data['ups']} | 💬 {data['num_comments']}")
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("Failed to fetch a meme. Please try again later.")
 
 async def setup(bot):
     await bot.add_cog(Reddit(bot))

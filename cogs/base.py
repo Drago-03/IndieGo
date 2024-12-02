@@ -53,5 +53,31 @@ class BaseCog(commands.Cog):
         embed = self.create_embed("✅ Success", message)
         await ctx.send(embed=embed)
 
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        """Handle errors globally"""
+        if isinstance(error, commands.MissingPermissions):
+            await self.send_permission_error(ctx)
+        elif isinstance(error, commands.CommandOnCooldown):
+            await self.send_cooldown_error(ctx, error.retry_after)
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await self.send_error(ctx, f"you're missing a required argument: {error.param.name}")
+        elif isinstance(error, commands.CommandNotFound):
+            await self.send_error(ctx, "the command you tried to use does not exist")
+        else:
+            await self.send_error(ctx, "an unexpected error occurred")
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        """Handle messages to check for unauthorized command usage"""
+        if message.author.bot:
+            return
+
+        if any(role.permissions.administrator for role in message.author.roles):
+            return
+
+        if any(command in message.content for command in ["!kick", "!ban", "!mute", "!warn"]):
+            await message.channel.send(f"{message.author.mention}, you don't have permission to use moderation commands.")
+
 async def setup(bot):
     await bot.add_cog(BaseCog(bot))

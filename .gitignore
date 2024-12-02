@@ -45,3 +45,6 @@ docker-compose.override.yml
 
 # website
 website/
+
+ Ignore the Google client secret JSON file
+client_secret_387366114996-cs5icp92iprh9bbuim7kffhrnbd3fvah.apps.googleusercontent.com.json

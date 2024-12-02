@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-import json
 
 class Logging(commands.Cog):
     """Cog for logging actions and errors"""
@@ -14,11 +13,11 @@ class Logging(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         guild = self.bot.guilds[0]
-        self.log_category = discord.utils.get(guild.categories, name="Logs")
+        self.log_category = discord.utils.get(guild.categories, name="Server Logging")
         if not self.log_category:
-            self.log_category = await guild.create_category("Logs")
+            self.log_category = await guild.create_category("Server Logging")
 
-        log_channel_names = ["general-logs", "error-logs", "command-logs"]
+        log_channel_names = ["admin-logs", "server-logs"]
         for name in log_channel_names:
             try:
                 channel = discord.utils.get(guild.text_channels, name=name)
@@ -29,36 +28,98 @@ class Logging(commands.Cog):
                 print(f"Failed to create or get channel {name}: {e}")
 
     @commands.Cog.listener()
+    async def on_member_update(self, before, after):
+        if before.display_name != after.display_name:
+            embed = discord.Embed(
+                title="Nickname Changed",
+                description=f"{before.mention} changed their nickname.",
+                color=discord.Color.blue()
+            )
+            embed.add_field(name="Before", value=before.display_name, inline=True)
+            embed.add_field(name="After", value=after.display_name, inline=True)
+            await self.log_channels["server-logs"].send(embed=embed)
+
+        if before.roles != after.roles:
+            embed = discord.Embed(
+                title="Roles Updated",
+                description=f"{before.mention} had their roles updated.",
+                color=discord.Color.blue()
+            )
+            before_roles = ", ".join([role.name for role in before.roles])
+            after_roles = ", ".join([role.name for role in after.roles])
+            embed.add_field(name="Before", value=before_roles, inline=True)
+            embed.add_field(name="After", value=after_roles, inline=True)
+            await self.log_channels["server-logs"].send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_user_update(self, before, after):
+        if before.avatar != after.avatar:
+            embed = discord.Embed(
+                title="Avatar Changed",
+                description=f"{before.mention} changed their avatar.",
+                color=discord.Color.blue()
+            )
+            embed.set_thumbnail(url=before.avatar.url)
+            embed.set_image(url=after.avatar.url)
+            await self.log_channels["server-logs"].send(embed=embed)
+
+        if before.name != after.name:
+            embed = discord.Embed(
+                title="Username Changed",
+                description=f"{before.mention} changed their username.",
+                color=discord.Color.blue()
+            )
+            embed.add_field(name="Before", value=before.name, inline=True)
+            embed.add_field(name="After", value=after.name, inline=True)
+            await self.log_channels["server-logs"].send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        embed = discord.Embed(
+            title="Member Joined",
+            description=f"{member.mention} joined the server.",
+            color=discord.Color.green()
+        )
+        embed.set_thumbnail(url=member.avatar.url)
+        await self.log_channels["server-logs"].send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        embed = discord.Embed(
+            title="Member Left",
+            description=f"{member.mention} left the server.",
+            color=discord.Color.red()
+        )
+        await self.log_channels["server-logs"].send(embed=embed)
+
+    @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        log_channel = discord.utils.get(ctx.guild.text_channels, name="mod-logs")
-        if log_channel:
-            await log_channel.send(f"Error: {error}")
+        embed = discord.Embed(
+            title="Command Error",
+            description=f"An error occurred: {error}",
+            color=discord.Color.red()
+        )
+        await self.log_channels["admin-logs"].send(embed=embed)
 
-    async def log_action(self, guild, action):
-        log_channel = discord.utils.get(guild.text_channels, name="mod-logs")
-        if log_channel:
-            await log_channel.send(action)
+    @commands.Cog.listener()
+    async def on_command_completion(self, ctx):
+        embed = discord.Embed(
+            title="Command Executed",
+            description=f"{ctx.command} was executed by {ctx.author.mention}.",
+            color=discord.Color.green()
+        )
+        await self.log_channels["admin-logs"].send(embed=embed)
 
-    async def is_premium(self, user_id):
-        # Check if the user has a premium subscription
-        try:
-            with open('premium_users.json', 'r') as f:
-                premium_users = json.load(f)
-            if user_id in premium_users:
-                return True
-        except FileNotFoundError:
-            return False
-        return False
-
-    @commands.command(name="initialize_logs")
-    async def initialize_logs_command(self, ctx):
+    @commands.command(name="setup_logs")
+    @commands.has_permissions(administrator=True)
+    async def setup_logs_command(self, ctx):
         """Setup logging channels"""
         guild = ctx.guild
-        self.log_category = discord.utils.get(guild.categories, name="Logs")
+        self.log_category = discord.utils.get(guild.categories, name="Server Logging")
         if not self.log_category:
-            self.log_category = await guild.create_category("Logs")
+            self.log_category = await guild.create_category("Server Logging")
 
-        log_channel_names = ["general-logs", "error-logs", "command-logs"]
+        log_channel_names = ["admin-logs", "server-logs"]
         for name in log_channel_names:
             try:
                 channel = discord.utils.get(guild.text_channels, name=name)
@@ -71,15 +132,16 @@ class Logging(commands.Cog):
 
         await ctx.send("Logging channels setup successfully.")
 
-    @app_commands.command(name="initialize_logs", description="Setup logging channels")
-    async def initialize_logs(self, interaction: discord.Interaction):
+    @app_commands.command(name="setup_logs", description="Setup logging channels")
+    @commands.has_permissions(administrator=True)
+    async def setup_logs(self, interaction: discord.Interaction):
         """Setup logging channels"""
         guild = interaction.guild
-        self.log_category = discord.utils.get(guild.categories, name="Logs")
+        self.log_category = discord.utils.get(guild.categories, name="Server Logging")
         if not self.log_category:
-            self.log_category = await guild.create_category("Logs")
+            self.log_category = await guild.create_category("Server Logging")
 
-        log_channel_names = ["general-logs", "error-logs", "command-logs"]
+        log_channel_names = ["admin-logs", "server-logs"]
         for name in log_channel_names:
             try:
                 channel = discord.utils.get(guild.text_channels, name=name)
