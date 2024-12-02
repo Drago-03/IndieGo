@@ -15,10 +15,16 @@ class OCR(commands.Cog):
         """Scan an image for text"""
         if ctx.message.attachments:
             attachment = ctx.message.attachments[0]
-            image_data = await attachment.read()
-            image = Image.open(io.BytesIO(image_data))
-            text = pytesseract.image_to_string(image)
-            await ctx.send(f"Extracted text:\n{text}")
+            try:
+                image_data = await attachment.read()
+                image = Image.open(io.BytesIO(image_data))
+                text = pytesseract.image_to_string(image)
+                if text.strip():
+                    await ctx.send(f"Extracted text:\n{text}")
+                else:
+                    await ctx.send("No text found in the image.")
+            except Exception as e:
+                await ctx.send(f"An error occurred while processing the image: {e}")
         else:
             await ctx.send("Please attach an image to scan.")
 

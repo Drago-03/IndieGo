@@ -1,63 +1,109 @@
-from flask import Flask
-from threading import Thread
-from dotenv import load_dotenv
-from discord.ext import commands
 import discord
-import os
+from discord.ext import commands
+from config import TOKEN, PREFIX
+from discord import app_commands
 import aiosqlite
+import asyncio
+import logging
+import sys
+import traceback
 
-from config import INSTALL_URL
+# Set up detailed logging
+logging.basicConfig(
+    level=logging.DEBUG,  # Changed to DEBUG for more detailed logs
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler('bot.log')
+    ]
+)
+logger = logging.getLogger('IndieGOBot')
 
-# Load environment variables from .env file
-load_dotenv()
-
-# Bot configuration
-TOKEN = os.getenv('DISCORD_TOKEN')
-PREFIX = '.'
+# Set up intents
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-bot = commands.Bot(command_prefix=PREFIX, intents=intents)
+class IndieGOBot(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix=PREFIX, intents=intents)
+        self.initial_extensions = [
+            'cogs.general',
+            'cogs.moderation',
+            'cogs.fun',
+            'cogs.admin',
+            'cogs.tickets',
+            'cogs.logging',
+            'cogs.ai_assistant',
+            'cogs.coding_help',
+            'cogs.help',
+            'cogs.base',
+            'cogs.errors',
+            'cogs.automod',
+            'cogs.dm_interaction',
+            'cogs.voice_channel',
+            'cogs.ocr',
+            'cogs.reddit'
+        ]
+        
+    async def setup_hook(self):
+        logger.info('Starting bot setup...')
+        
+        # Load cogs with detailed error handling
+        for extension in self.initial_extensions:
+            try:
+                logger.debug(f'Attempting to load extension: {extension}')
+                await self.load_extension(extension)
+                logger.info(f'Successfully loaded extension: {extension}')
+            except Exception as e:
+                logger.error(f'Failed to load extension {extension}')
+                logger.error(f'Error type: {type(e).__name__}')
+                logger.error(f'Error message: {str(e)}')
+                logger.error('Traceback:')
+                logger.error(traceback.format_exc())
+                # Continue loading other extensions instead of stopping
+                continue
+
+        # Try to sync commands after loading available cogs
+        try:
+            logger.info('Syncing command tree...')
+            await self.tree.sync()
+            logger.info('Command tree synced successfully')
+        except Exception as e:
+            logger.error(f'Failed to sync command tree: {str(e)}')
+            logger.error(traceback.format_exc())
+
+    async def on_ready(self):
+        logger.info(f'{self.user} has connected to Discord!')
+        await self.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.watching,
+                name="for .help | /help"
+            )
+        )
+
+bot = IndieGOBot()
 
 @bot.event
-async def on_ready():
-    print(f'Logged in as {bot.user}')
-    bot.db = await aiosqlite.connect('data/messages.db')
+async def on_error(event, *args, **kwargs):
+    logger.error(f'Error in event {event}:')
+    logger.error(traceback.format_exc())
 
-@bot.event
-async def on_message(message):
-    if message.author.bot:
-        return
-    async with bot.db.execute('INSERT INTO messages (user_id, message) VALUES (?, ?)', (message.author.id, message.content)):
-        await bot.db.commit()
-    await bot.process_commands(message)
-
-# Load cogs
-async def load_cogs():
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            await bot.load_extension(f'cogs.{filename[:-3]}')
-
-# Flask web server to keep the bot running
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Discord bot is running!"
-
-def run():
-    app.run(host='0.0.0.0', port=8080)
-
-def keep_alive():
-    t = Thread(target=run)
-    t.start()
+async def main():
+    try:
+        logger.info('Starting bot...')
+        async with bot:
+            await bot.start(TOKEN)
+    except Exception as e:
+        logger.error(f'Fatal error in main: {str(e)}')
+        logger.error(traceback.format_exc())
+        sys.exit(1)
 
 if __name__ == "__main__":
-    keep_alive()
-    bot.loop.create_task(load_cogs())
-    bot.run(TOKEN)
-
-@bot.event
-async def on_close():
-    await bot.db.close()
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info('Bot shutdown initiated by user')
+    except Exception as e:
+        logger.error(f'Unexpected error in runner: {str(e)}')
+        logger.error(traceback.format_exc())

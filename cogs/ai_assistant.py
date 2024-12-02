@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-import openai
 import anthropic
 import google.generativeai as genai
 import os
@@ -15,143 +14,79 @@ class AIAssistant(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         # Initialize API keys from environment variables
-        self.openai_api_key = os.getenv('OPENAI_API_KEY')
         self.anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
-        self.google_api_key = os.getenv('GOOGLE_API_KEY')
+        self.gemini_api_key = os.getenv('GEMINI_API_KEY')
         
         # Initialize API clients
-        if self.openai_api_key:
-            openai.api_key = self.openai_api_key
         if self.anthropic_api_key:
             self.claude = anthropic.Client(api_key=self.anthropic_api_key)
-        if self.google_api_key:
-            genai.configure(api_key=self.google_api_key)
+        if self.gemini_api_key:
+            genai.configure(api_key=self.gemini_api_key)
         
         # Rate limiting
         self.cooldowns = {}
         self.COOLDOWN_MINUTES = 1
         
         # Message history
-        self.conversation_history = {}
+        self.message_history = {}
 
-    async def get_ai_response(self, prompt: str, user_id: str, model: str = "gpt-3.5-turbo") -> str:
-        """Generate AI response using available models"""
-        try:
-            # Check cooldown
-            if not await self.check_cooldown(user_id):
-                return "Please wait a moment before making another request."
+    async def fetch_claude_response(self, prompt):
+        async with aiohttp.ClientSession() as session:
+            headers = {
+                'Authorization': f'Bearer {self.anthropic_api_key}',
+                'Content-Type': 'application/json'
+            }
+            data = {
+                'prompt': prompt,
+                'max_tokens': 150
+            }
+            async with session.post('https://api.anthropic.com/v1/complete', headers=headers, json=data) as response:
+                result = await response.json()
+                return result['choices'][0]['text']
 
-            # Handle different AI services
-            if self.openai_api_key and model.startswith("gpt"):
-                response = await self.get_openai_response(prompt)
-            elif self.anthropic_api_key and model == "claude":
-                response = await self.get_claude_response(prompt)
-            elif self.google_api_key and model == "gemini":
-                response = await self.get_gemini_response(prompt)
-            else:
-                response = "No AI service is currently available."
+    async def fetch_gemini_response(self, prompt):
+        async with aiohttp.ClientSession() as session:
+            headers = {
+                'Authorization': f'Bearer {self.gemini_api_key}',
+                'Content-Type': 'application/json'
+            }
+            data = {
+                'prompt': prompt,
+                'max_tokens': 150
+            }
+            async with session.post('https://api.gemini.com/v1/complete', headers=headers, json=data) as response:
+                result = await response.json()
+                return result['choices'][0]['text']
 
-            return response
+    @commands.command(name="ask")
+    async def ask_command(self, ctx, *, question: str):
+        """Ask a question to the AI assistant"""
+        if ctx.author.id in self.cooldowns and self.cooldowns[ctx.author.id] > datetime.now():
+            await ctx.send("You are on cooldown. Please wait before asking another question.")
+            return
 
-        except Exception as e:
-            return f"An error occurred: {str(e)}"
+        prompt = f"User: {question}\nBot:"
+        claude_response = await self.fetch_claude_response(prompt)
+        gemini_response = await self.fetch_gemini_response(prompt)
+        response = f"Claude: {claude_response}\nGemini: {gemini_response}"
+        await ctx.send(response)
 
-    async def get_openai_response(self, prompt: str) -> str:
-        """Get response from OpenAI's GPT"""
-        try:
-            response = await asyncio.to_thread(
-                openai.ChatCompletion.create,
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": prompt}]
-            )
-            return response.choices[0].message.content
-        except Exception as e:
-            return f"OpenAI Error: {str(e)}"
-
-    async def get_claude_response(self, prompt: str) -> str:
-        """Get response from Anthropic's Claude"""
-        try:
-            response = await asyncio.to_thread(
-                self.claude.messages.create,
-                model="claude-3-sonnet-20240229",
-                max_tokens=1024,
-                messages=[{"role": "user", "content": prompt}]
-            )
-            return response.content[0].text
-        except Exception as e:
-            return f"Claude Error: {str(e)}"
-
-    async def get_gemini_response(self, prompt: str) -> str:
-        """Get response from Google's Gemini"""
-        try:
-            model = genai.GenerativeModel('gemini-pro')
-            response = await asyncio.to_thread(
-                model.generate_content,
-                prompt
-            )
-            return response.text
-        except Exception as e:
-            return f"Gemini Error: {str(e)}"
-
-    async def check_cooldown(self, user_id: str) -> bool:
-        """Check if user is on cooldown"""
-        if user_id in self.cooldowns:
-            if datetime.now() < self.cooldowns[user_id]:
-                return False
-        self.cooldowns[user_id] = datetime.now() + timedelta(minutes=self.COOLDOWN_MINUTES)
-        return True
+        self.cooldowns[ctx.author.id] = datetime.now() + timedelta(minutes=self.COOLDOWN_MINUTES)
 
     @app_commands.command(name="ask", description="Ask a question to the AI assistant")
-    async def ask(self, interaction: discord.Interaction, question: str, model: Optional[str] = "gpt-3.5-turbo"):
-        """Ask a general question to the AI assistant"""
-        await interaction.response.defer()
-        answer = await self.get_ai_response(question, str(interaction.user.id), model)
-        
-        embed = discord.Embed(
-            title="AI Assistant Response",
-            description=answer,
-            color=discord.Color.blue(),
-            timestamp=datetime.now()
-        )
-        embed.set_footer(text=f"Requested by {interaction.user.name} | Model: {model}")
-        
-        await interaction.followup.send(embed=embed)
+    async def ask_slash(self, interaction: discord.Interaction, question: str):
+        """Ask a question to the AI assistant"""
+        if interaction.user.id in self.cooldowns and self.cooldowns[interaction.user.id] > datetime.now():
+            await interaction.response.send_message("You are on cooldown. Please wait before asking another question.", ephemeral=True)
+            return
 
-    @app_commands.command(name="codehelp", description="Get coding help")
-    async def codehelp(self, interaction: discord.Interaction, code: str, language: Optional[str] = None):
-        """Get coding help from the AI assistant"""
-        await interaction.response.defer()
-        
-        prompt = f"Please help with this code in {language if language else 'any language'}:\n```\n{code}\n```"
-        response = await self.get_ai_response(prompt, str(interaction.user.id))
-        
-        embed = discord.Embed(
-            title="Code Help",
-            description=response,
-            color=discord.Color.green(),
-            timestamp=datetime.now()
-        )
-        embed.set_footer(text=f"Requested by {interaction.user.name}")
-        
-        await interaction.followup.send(embed=embed)
+        prompt = f"User: {question}\nBot:"
+        claude_response = await self.fetch_claude_response(prompt)
+        gemini_response = await self.fetch_gemini_response(prompt)
+        response = f"Claude: {claude_response}\nGemini: {gemini_response}"
+        await interaction.response.send_message(response)
 
-    @app_commands.command(name="explain", description="Explain code in simple terms")
-    async def explain(self, interaction: discord.Interaction, code: str):
-        """Explain code in simple terms"""
-        await interaction.response.defer()
-        
-        prompt = f"Explain this code in simple terms:\n```\n{code}\n```"
-        explanation = await self.get_ai_response(prompt, str(interaction.user.id))
-        
-        embed = discord.Embed(
-            title="Code Explanation",
-            description=explanation,
-            color=discord.Color.purple(),
-            timestamp=datetime.now()
-        )
-        embed.set_footer(text=f"Requested by {interaction.user.name}")
-        
-        await interaction.followup.send(embed=embed)
+        self.cooldowns[interaction.user.id] = datetime.now() + timedelta(minutes=self.COOLDOWN_MINUTES)
 
 async def setup(bot):
     await bot.add_cog(AIAssistant(bot))

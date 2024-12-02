@@ -53,3 +53,6 @@ python-multipart
 pynacl
 discord.py>=2.0.0
 aiosqlite
+gtts
+google-cloud-speech
+pydub
