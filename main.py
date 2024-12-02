@@ -26,7 +26,11 @@ intents.members = True
 
 class IndieGOBot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=PREFIX, intents=intents)
+        super().__init__(
+            command_prefix=PREFIX, 
+            intents=intents,
+            help_command=None  # Disable default help command
+        )
         self.initial_extensions = [
             'cogs.general',
             'cogs.moderation',
@@ -36,7 +40,7 @@ class IndieGOBot(commands.Bot):
             'cogs.logging',
             'cogs.ai_assistant',
             'cogs.coding_help',
-            'cogs.help',
+            'cogs.help',  # Load help cog last
             'cogs.base',
             'cogs.errors',
             'cogs.automod',
