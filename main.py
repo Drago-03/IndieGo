@@ -74,36 +74,25 @@ class IndieGOBot(commands.Bot):
             logger.error(traceback.format_exc())
 
     async def on_ready(self):
-        logger.info(f'{self.user} has connected to Discord!')
-        await self.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.watching,
-                name="for .help | /help"
-            )
-        )
+        logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
+        logger.info("------")
+
+    async def on_command_error(self, ctx, error):
+        if hasattr(ctx.command, 'on_error'):
+            return
+
+        cog = ctx.cog
+        if cog:
+            if commands.Cog._get_overridden_method(cog.cog_command_error) is not None:
+                return
+
+        logger.error('Ignoring exception in command {}:'.format(ctx.command), exc_info=error)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
 bot = IndieGOBot()
 
-@bot.event
-async def on_error(event, *args, **kwargs):
-    logger.error(f'Error in event {event}:')
-    logger.error(traceback.format_exc())
-
 async def main():
-    try:
-        logger.info('Starting bot...')
-        async with bot:
-            await bot.start(TOKEN)
-    except Exception as e:
-        logger.error(f'Fatal error in main: {str(e)}')
-        logger.error(traceback.format_exc())
-        sys.exit(1)
+    async with bot:
+        await bot.start(TOKEN)
 
-if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        logger.info('Bot shutdown initiated by user')
-    except Exception as e:
-        logger.error(f'Unexpected error in runner: {str(e)}')
-        logger.error(traceback.format_exc())
+asyncio.run(main())

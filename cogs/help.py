@@ -2,9 +2,8 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 from discord.ui import Select, View
-import json
 
-from config import INSTALL_URL, SUPPORT_SERVER_LINK, BOT_WEBSITE
+from config import SUPPORT_SERVER_LINK
 
 class HelpDropdown(Select):
     def __init__(self, bot):
@@ -64,17 +63,6 @@ class HelpView(View):
 class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    async def is_premium(self, user_id):
-        # Check if the user has a premium subscription
-        try:
-            with open('premium_users.json', 'r') as f:
-                premium_users = json.load(f)
-            if user_id in premium_users:
-                return premium_users[user_id]['tier']
-        except FileNotFoundError:
-            return None
-        return None
 
     @commands.command(name="help")
     async def help_command(self, ctx):
