@@ -7,6 +7,7 @@ from config import TICKET_CATEGORY_ID, STAFF_ROLE_ID, LOG_CHANNEL_ID
 class Tickets(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.log_channels = {}
 
     @commands.Cog.listener()
     async def on_ready(self):

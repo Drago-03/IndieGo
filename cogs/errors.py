@@ -18,35 +18,30 @@ class ErrorHandler(commands.Cog):
                 description=f"You're missing a required argument: `{error.param.name}`.\nPlease provide all required arguments and try again.",
                 color=discord.Color.red()
             )
-            user_message = "You're missing a required argument. Please check the command and try again."
         elif isinstance(error, commands.CommandNotFound):
             embed = discord.Embed(
                 title="Command Not Found",
                 description="The command you tried to use does not exist. Please check the command and try again.",
                 color=discord.Color.red()
             )
-            user_message = "The command you tried to use does not exist. Please check the command and try again."
         elif isinstance(error, commands.MissingPermissions):
             embed = discord.Embed(
                 title="Missing Permissions",
                 description="You do not have the required permissions to use this command.",
                 color=discord.Color.red()
             )
-            user_message = "You do not have the required permissions to use this command."
         elif isinstance(error, commands.BotMissingPermissions):
             embed = discord.Embed(
                 title="Bot Missing Permissions",
                 description="I do not have the required permissions to execute this command.",
                 color=discord.Color.red()
             )
-            user_message = "I do not have the required permissions to execute this command."
         elif isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(
                 title="Command On Cooldown",
                 description=f"This command is on cooldown. Please try again after {error.retry_after:.2f} seconds.",
                 color=discord.Color.red()
             )
-            user_message = f"This command is on cooldown. Please try again after {error.retry_after:.2f} seconds."
         else:
             embed = discord.Embed(
                 title="An Error Occurred",
@@ -54,7 +49,6 @@ class ErrorHandler(commands.Cog):
                 color=discord.Color.red()
             )
             embed.add_field(name="Error Details", value=str(error))
-            user_message = "An unexpected error occurred. Please try again later."
 
         # Send the error message to the user
         await ctx.send(embed=embed)
