@@ -8,9 +8,9 @@ import logging
 import sys
 import traceback
 
-# Set up detailed logging
+# Set up logging
 logging.basicConfig(
-    level=logging.DEBUG,  # Changed to DEBUG for more detailed logs
+    level=logging.DEBUG,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout),
@@ -27,11 +27,12 @@ intents.members = True
 class IndieGOBot(commands.Bot):
     def __init__(self):
         super().__init__(
-            command_prefix=PREFIX, 
+            command_prefix=PREFIX,
             intents=intents,
             help_command=None  # Disable default help command
         )
         self.initial_extensions = [
+            'cogs.errors',  # Load error handler first
             'cogs.general',
             'cogs.moderation',
             'cogs.fun',
@@ -40,58 +41,43 @@ class IndieGOBot(commands.Bot):
             'cogs.logging',
             'cogs.ai_assistant',
             'cogs.coding_help',
-            'cogs.help',  # Load help cog last
             'cogs.base',
-            'cogs.errors',
             'cogs.automod',
             'cogs.dm_interaction',
             'cogs.voice_channel',
             'cogs.ocr',
-            'cogs.reddit'
+            'cogs.reddit',
+            'cogs.help'  # Load help cog last
         ]
-        
+
     async def setup_hook(self):
         logger.info('Starting bot setup...')
         
-        # Load cogs with detailed error handling
+        # Load all cogs
         for extension in self.initial_extensions:
             try:
-                logger.debug(f'Attempting to load extension: {extension}')
                 await self.load_extension(extension)
                 logger.info(f'Successfully loaded extension: {extension}')
             except Exception as e:
-                logger.error(f'Failed to load extension {extension}')
-                logger.error(f'Error type: {type(e).__name__}')
-                logger.error(f'Error message: {str(e)}')
-                logger.error('Traceback:')
+                logger.error(f'Failed to load extension {extension}: {str(e)}')
                 logger.error(traceback.format_exc())
-                # Continue loading other extensions instead of stopping
-                continue
 
-        # Try to sync commands after loading available cogs
+        # Sync commands
         try:
-            logger.info('Syncing command tree...')
-            await self.tree.sync()
-            logger.info('Command tree synced successfully')
+            synced = await self.tree.sync()
+            logger.info(f'Synced {len(synced)} command(s)')
         except Exception as e:
-            logger.error(f'Failed to sync command tree: {str(e)}')
+            logger.error(f'Failed to sync commands: {str(e)}')
             logger.error(traceback.format_exc())
 
     async def on_ready(self):
-        logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
-        logger.info("------")
+        logger.info(f'Logged in as {self.user} (ID: {self.user.id})')
+        logger.info('------')
 
     async def on_command_error(self, ctx, error):
-        if hasattr(ctx.command, 'on_error'):
-            return
-
-        cog = ctx.cog
-        if cog:
-            if commands.Cog._get_overridden_method(cog.cog_command_error) is not None:
-                return
-
-        logger.error('Ignoring exception in command {}:'.format(ctx.command), exc_info=error)
-        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+        # Pass all errors to the error handler cog
+        if not hasattr(ctx.command, 'on_error'):
+            return await ctx.cog.cog_command_error(ctx, error)
 
 bot = IndieGOBot()
 
@@ -99,4 +85,11 @@ async def main():
     async with bot:
         await bot.start(TOKEN)
 
-asyncio.run(main())
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info('Bot shutdown initiated by user')
+    except Exception as e:
+        logger.error(f'Unexpected error: {str(e)}')
+        logger.error(traceback.format_exc())
