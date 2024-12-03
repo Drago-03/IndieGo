@@ -33,7 +33,7 @@ class IndieGOBot(commands.Bot):
         )
         self.initial_extensions = [
             'cogs.errors',  # Load error handler first
-            'cogs.general',
+            'cogs.general',  # Load general first after errors
             'cogs.moderation',
             'cogs.fun',
             'cogs.admin',
@@ -41,17 +41,25 @@ class IndieGOBot(commands.Bot):
             'cogs.logging',
             'cogs.ai_assistant',
             'cogs.coding_help',
+            'cogs.help',
             'cogs.base',
             'cogs.automod',
             'cogs.dm_interaction',
             'cogs.voice_channel',
             'cogs.ocr',
-            'cogs.reddit',
-            'cogs.help'  # Load help cog last
+            'cogs.reddit'
         ]
 
     async def setup_hook(self):
         logger.info('Starting bot setup...')
+        
+        # Sync commands on startup
+        try:
+            synced = await self.tree.sync()
+            logger.info(f'Synced {len(synced)} command(s)')
+        except Exception as e:
+            logger.error(f'Failed to sync commands: {str(e)}')
+            logger.error(traceback.format_exc())
         
         # Load all cogs
         for extension in self.initial_extensions:
@@ -61,14 +69,6 @@ class IndieGOBot(commands.Bot):
             except Exception as e:
                 logger.error(f'Failed to load extension {extension}: {str(e)}')
                 logger.error(traceback.format_exc())
-
-        # Sync commands
-        try:
-            synced = await self.tree.sync()
-            logger.info(f'Synced {len(synced)} command(s)')
-        except Exception as e:
-            logger.error(f'Failed to sync commands: {str(e)}')
-            logger.error(traceback.format_exc())
 
     async def on_ready(self):
         logger.info(f'Logged in as {self.user} (ID: {self.user.id})')

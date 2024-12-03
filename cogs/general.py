@@ -1,10 +1,9 @@
+import random
 import discord
 from discord.ext import commands
 from discord import app_commands
 from discord.ui import Button, View
-import random
-
-SUPPORT_SERVER_LINK = "https://discord.gg/your-support-server-link"
+from config import SUPPORT_SERVER_LINK, BOT_WEBSITE
 
 class ProfileView(View):
     def __init__(self, member):
@@ -42,6 +41,8 @@ class ProfileView(View):
             await interaction.response.send_message("This server does not have a banner set.", ephemeral=True)
 
 class General(commands.Cog):
+    """General bot commands"""
+    
     def __init__(self, bot):
         self.bot = bot
 
@@ -64,7 +65,7 @@ class General(commands.Cog):
             color=discord.Color.blue()
         )
         embed.add_field(name="Author", value="Drago", inline=False)
-        embed.add_field(name="Website", value="[IndieGO Website](https://drago-03.github.io/IndieGo-Website/)", inline=False)
+        embed.add_field(name="Website", value=f"[IndieGO Website]({BOT_WEBSITE})", inline=False)
         embed.set_footer(text="Thank you for using IndieGO Bot!")
         await ctx.send(embed=embed)
 
@@ -77,7 +78,7 @@ class General(commands.Cog):
             color=discord.Color.blue()
         )
         embed.add_field(name="Author", value="Drago", inline=False)
-        embed.add_field(name="Website", value="[IndieGO Website](https://drago-03.github.io/IndieGo-Website/)", inline=False)
+        embed.add_field(name="Website", value=f"[IndieGO Website]({BOT_WEBSITE})", inline=False)
         embed.set_footer(text="Thank you for using IndieGO Bot!")
         await interaction.response.send_message(embed=embed)
 
@@ -113,6 +114,8 @@ class General(commands.Cog):
         embed.add_field(name="Region", value=guild.region, inline=False)
         embed.add_field(name="Members", value=guild.member_count, inline=False)
         embed.add_field(name="Created At", value=guild.created_at.strftime("%Y-%m-%d %H:%M:%S"), inline=False)
+        if guild.icon:
+            embed.set_thumbnail(url=guild.icon.url)
         await ctx.send(embed=embed)
 
     @app_commands.command(name="serverinfo", description="Show information about the server")
@@ -129,6 +132,8 @@ class General(commands.Cog):
         embed.add_field(name="Region", value=guild.region, inline=False)
         embed.add_field(name="Members", value=guild.member_count, inline=False)
         embed.add_field(name="Created At", value=guild.created_at.strftime("%Y-%m-%d %H:%M:%S"), inline=False)
+        if guild.icon:
+            embed.set_thumbnail(url=guild.icon.url)
         await interaction.response.send_message(embed=embed)
 
     @commands.command(name="support")
@@ -157,7 +162,13 @@ class General(commands.Cog):
         if member is None:
             member = ctx.author
         view = ProfileView(member)
-        await ctx.send("Choose an option:", view=view)
+        embed = discord.Embed(
+            title=f"Profile - {member.name}",
+            description="Click the buttons below to view different profile aspects.",
+            color=discord.Color.blue()
+        )
+        embed.set_thumbnail(url=member.avatar.url)
+        await ctx.send(embed=embed, view=view)
 
     @app_commands.command(name="profile", description="Show profile options for the user")
     async def profile(self, interaction: discord.Interaction, member: discord.Member = None):
@@ -165,7 +176,13 @@ class General(commands.Cog):
         if member is None:
             member = interaction.user
         view = ProfileView(member)
-        await interaction.response.send_message("Choose an option:", view=view)
+        embed = discord.Embed(
+            title=f"Profile - {member.name}",
+            description="Click the buttons below to view different profile aspects.",
+            color=discord.Color.blue()
+        )
+        embed.set_thumbnail(url=member.avatar.url)
+        await interaction.response.send_message(embed=embed, view=view)
 
 async def setup(bot):
     await bot.add_cog(General(bot))

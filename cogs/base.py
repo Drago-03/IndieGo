@@ -10,15 +10,8 @@ class BaseCog(commands.Cog):
 
     def create_embed(self, title: str, description: str = None, error: bool = False) -> discord.Embed:
         """Create a branded embed"""
-        embed = discord.Embed(
-            title=title,
-            description=description,
-            color=discord.Color.red() if error else EMBED_COLOR
-        )
-        embed.set_footer(
-            text=AUTHOR_NAME,
-            icon_url=AUTHOR_ICON
-        )
+        color = discord.Color.red() if error else discord.Color.blue()
+        embed = discord.Embed(title=title, description=description, color=color)
         return embed
 
     async def send_error(self, ctx, message: str):
@@ -56,16 +49,8 @@ class BaseCog(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         """Handle errors globally"""
-        if isinstance(error, commands.MissingPermissions):
-            await self.send_permission_error(ctx)
-        elif isinstance(error, commands.CommandOnCooldown):
-            await self.send_cooldown_error(ctx, error.retry_after)
-        elif isinstance(error, commands.MissingRequiredArgument):
-            await self.send_error(ctx, f"you're missing a required argument: {error.param.name}")
-        elif isinstance(error, commands.CommandNotFound):
-            await self.send_error(ctx, "the command you tried to use does not exist")
-        else:
-            await self.send_error(ctx, "an unexpected error occurred")
+        # Remove this listener to prevent duplicate errors
+        pass
 
     @commands.Cog.listener()
     async def on_message(self, message):
