@@ -9,9 +9,9 @@ class AutoMod(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bad_words = [
-            "badword1", "badword2", "badword3", "badword4", "badword5",
-            "badword6", "badword7", "badword8", "badword9", "badword10"
-        ]  # Add more bad words here
+            # Add your bad words here
+            # Example: "badword1", "badword2", etc.
+        ]
         self.auto_mod_enabled = False
 
     @commands.Cog.listener()
@@ -30,6 +30,7 @@ class AutoMod(commands.Cog):
             await log_channel.send(action)
 
     @commands.command(name="warn")
+    @commands.has_permissions(manage_messages=True)
     async def warn_command(self, ctx, member: discord.Member, *, reason: str):
         """Warn a member"""
         await member.send(f"You have been warned by {ctx.author}.\nReason: {reason}")
@@ -38,6 +39,7 @@ class AutoMod(commands.Cog):
 
     @app_commands.command(name="warn", description="Warn a member")
     @app_commands.describe(member="The member to warn", reason="The reason for the warning")
+    @commands.has_permissions(manage_messages=True)
     async def warn_slash(self, interaction: discord.Interaction, member: discord.Member, reason: str):
         """Warn a member"""
         await member.send(f"You have been warned by {interaction.user}.\nReason: {reason}")
