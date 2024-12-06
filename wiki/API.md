@@ -115,18 +115,3 @@ response = requests.post(
 
 print(response.json())
 ```
-
-### JavaScript
-```javascript
-const analyzeCode = async (code) => {
-    const response = await fetch('https://api.devassist.com/code/review', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ code })
-    });
-    return response.json();
-};
-```
