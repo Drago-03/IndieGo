@@ -24,7 +24,6 @@ env/
 # Logs and databases
 *.sqlite3
 *.db
-*.log
 
 # Pytest cache
 .pytest_cache/
