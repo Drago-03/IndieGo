@@ -8,8 +8,7 @@ This document details all configuration options for the DevAssist Discord bot.
 
 ```env
 DISCORD_TOKEN=your_discord_token_here
-ANTHROPIC_API_KEY=api_key_here
-GEMINI_API_KEY=api_key_here
+OPENAI_API_KEY=your_openai_api_key_here
 ```
 
 ### Optional Variables
@@ -84,6 +83,7 @@ Configures command settings:
 Required permissions integer: `8`
 
 Includes:
+
 - Manage Messages
 - Manage Channels
 - View Channels
@@ -96,6 +96,7 @@ Includes:
 ### Intents
 
 Required intents:
+
 - Message Content
 - Guild Members
 - Guild Messages
@@ -106,6 +107,7 @@ Required intents:
 Default SQLite database location: `data/subscriptions.db`
 
 Custom location:
+
 ```python
 subscription = Subscription(db_path="custom/path/to/db.sqlite")
 ```

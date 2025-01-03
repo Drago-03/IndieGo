@@ -4,21 +4,23 @@ This guide provides detailed instructions for setting up the DevAssist Discord b
 
 ## Prerequisites
 
-- Python 3.9 or higher
+- Python 3.8 or higher
 - pip (Python package manager)
 - A Discord account and application
-- Gemini and Anthropic Api key
+- An OpenAI API key
 
 ## Step-by-Step Installation
 
 ### 1. System Requirements
 
 #### Windows
+
 - Install Python from [python.org](https://python.org)
 - Add Python to PATH during installation
 - Install Git from [git-scm.com](https://git-scm.com)
 
 #### Linux/macOS
+
 ```bash
 # Ubuntu/Debian
 sudo apt update
@@ -31,8 +33,8 @@ brew install python git
 ### 2. Clone Repository
 
 ```bash
-git clone https://github.com/Drago-03/IndieGo.git
-cd IndieGo
+git clone https://github.com/your-username/devassist-bot.git
+cd devassist-bot
 ```
 
 ### 3. Virtual Environment (Recommended)
@@ -57,20 +59,22 @@ pip install -r requirements.txt
 ### 5. Configuration
 
 1. Copy example environment file:
+
    ```bash
    cp .env.example .env
    ```
 
 2. Edit `.env` with your credentials:
+
    ```env
    DISCORD_TOKEN=your_discord_token_here
-   GEMINI_API_KEY=api_key_here
-   ANTHROPIC_API_KEY=API_KEY_HERE
+   OPENAI_API_KEY=your_openai_api_key_here
    ```
 
 3. Configure `config.py`:
-   - Adjust settings as needed
-   - Add team members list
+   - Set ticket category ID
+   - Set staff role ID
+   - Adjust other settings as needed
 
 ### 6. Database Setup
 
@@ -97,6 +101,7 @@ python src/main.py
 1. **ModuleNotFoundError**
    - Ensure virtual environment is activated
    - Verify all dependencies are installed
+
    ```bash
    pip install -r requirements.txt --upgrade
    ```
@@ -108,6 +113,7 @@ python src/main.py
 3. **Database Errors**
    - Delete existing database file
    - Run initialization script again
+
    ```bash
    rm data/subscriptions.db
    python scripts/init_db.py
@@ -116,5 +122,5 @@ python src/main.py
 ### Getting Help
 
 - Check [FAQ](FAQ.md)
-- Join our [Discord server](https://discord.gg/9bPsjgnJ5v)
-- Open an [issue](https://github.com/Drago-03/IndieGO/issues)
+- Join our [Discord server](https://discord.gg/your-invite)
+- Open an [issue](https://github.com/your-username/devassist-bot/issues)
