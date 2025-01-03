@@ -1,12 +1,12 @@
-import discord
-from discord.ext import commands
-from config import TOKEN, PREFIX
-from discord import app_commands
-import aiosqlite
 import asyncio
 import logging
 import sys
 import traceback
+
+import discord
+from discord.ext import commands
+
+from config import TOKEN, PREFIX
 
 # Set up logging
 logging.basicConfig(
