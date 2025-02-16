@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
 
 # Bot Configuration
@@ -8,7 +9,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-PREFIX = '.'
+PREFIX = os.getenv('COMMAND_PREFIX', '!')  # Default prefix is ! if not specified
 #TICKET_CATEGORY_ID = int(os.getenv('TICKET_CATEGORY_ID', '0'))
 #STAFF_ROLE_ID = int(os.getenv('STAFF_ROLE_ID', '0'))
 LOG_CHANNEL_ID = int(os.getenv('LOG_CHANNEL_ID', '1308525133048188949'))
