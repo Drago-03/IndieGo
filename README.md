@@ -37,6 +37,42 @@ What truly sets IndieGo apart is its unprecedented collaborative capabilities. I
 - Custom integrations
 - SLA guarantees
 
+### Core Features
+
+Collaborative IDE Environment - Real-time code editing within Discord
+Security Analysis Engine - AST-based code review and vulnerability detection
+Advanced Ticket System - Full-featured support management with categories and history
+Neural Code Synthesis - Local model-powered code generation
+Code Execution Sandbox - Safe code running environment with timeouts and safeguards
+
+### Developer Utilities
+
+UUID Generator - Creates random UUIDs for developers
+Secure Password Generator - Generates strong passwords with customizable length
+Hash Calculator - Supports multiple algorithms (md5, sha1, sha256, sha512)
+Base64 Encoder/Decoder - Convert strings to/from Base64
+Lorem Ipsum Generator - Create placeholder text for design mockups
+
+Collaboration Features
+Real-time Code Collaboration - Multiple users can edit code simultaneously
+Version History Tracking - Records who made what changes and when
+Security Reviews - Automatic code analysis for potential vulnerabilities
+Code Execution - Run and see results directly in Discord
+
+### Ticket System Capabilities
+
+Custom Ticket Categories - Organize support requests by type
+Comment System - Add updates to existing tickets
+Status Tracking - Monitor open/closed tickets and their history
+Ticket Persistence - Save ticket data between bot restarts
+
+### Technical Architecture
+
+API-Key-Free Operation - Runs entirely without external service dependencies
+Local NLP Processing - Uses on-device models for language tasks
+ONNX Optimization - Fast inference for code generation
+Rule-Based Fallbacks - Graceful degradation when ML models are unavailable
+
 ## How to Sponsor
 
 If you sponsor us, your name will be highlighted in the bot and server.
@@ -59,3 +95,27 @@ IndieGO Bot is currently in [![Servers](https://img.shields.io/badge/dynamic/jso
 ## 🐦 Follow me on Twitter
 
 Stay updated with the latest news and updates by following me on [Twitter](https://twitter.com/_gear_head_03_).
+
+
+# Future features:
+
+Discord-Native Visual Code Graphing - Generate real-time dependency graphs, execution flows, and code structure visualizations directly in Discord using ASCII/Unicode art - no external tools needed
+Collaborative Code Evolution - Implement a genetic algorithm that creates optimized versions of user code based on community input and previous optimizations
+Serverless Database Federation - Allow communities to share data structures and implementations across Discord servers without cloud dependencies
+Code DNA Tracking - Unique fingerprinting system that tracks how code evolves across different users and servers, displaying code "ancestry" visualizations
+Real-time Peer Code Review System - Anonymous matching of developers to review each other's code with reputation-based incentives
+Visual Programming Interface - Create code through Discord reaction-based interfaces, allowing even non-programmers to generate functional code
+Discord-to-Executable Pipeline - Compile and package code written in Discord directly into standalone executables that users can download
+Decentralized Knowledge Base - Bot automatically captures solutions from conversations and builds a searchable knowledge repository specific to each server
+Voice-to-Code Transcription - Convert voice messages in Discord directly to code snippets with appropriate syntax
+Role-Based Code Permissions - Define which Discord roles can edit specific sections of collaborative code projects
+Semantic Code Search - Find similar code patterns across all saved snippets without any external search engine
+In-Discord Debugger - Set breakpoints, inspect variables, and step through code execution directly within Discord messages
+Code Competition System - Automatically generate coding challenges and evaluate submissions, maintaining leaderboards
+Natural Language Requirement Analysis - Convert user requirements written in plain English into code architecture diagrams
+Time-Travel Debugging - Rewind execution states to pinpoint when bugs were introduced during collaborative sessions
+Discord-Native CI/CD - Automated testing and deployment pipeline that runs entirely within Discord
+Cross-Server Code Markets - Allow communities to share, trade, or collaborate on code assets across different Discord servers
+Automated Documentation Generator - Create comprehensive documentation from code comments that's viewable directly in Discord
+Sentiment Analysis for Code Reviews - Provide feedback on how constructive or negative code review comments are to promote better communication
+Self-Improving Command System - Commands that evolve based on usage patterns to become more efficient for each specific server
