@@ -16,6 +16,7 @@ Content-Type: application/json
 ```
 
 Response:
+
 ```json
 {
     "token": "jwt_token_here",
@@ -28,6 +29,7 @@ Response:
 ### Code Analysis
 
 #### Request Code Review
+
 ```http
 POST /api/code/review
 Authorization: Bearer <token>
@@ -40,6 +42,7 @@ Content-Type: application/json
 ```
 
 Response:
+
 ```json
 {
     "complexity": 1,
@@ -52,6 +55,7 @@ Response:
 ### Project Management
 
 #### Create Project Structure
+
 ```http
 POST /api/project/create
 Authorization: Bearer <token>
@@ -64,6 +68,7 @@ Content-Type: application/json
 ```
 
 Response:
+
 ```json
 {
     "structure": [...],
@@ -101,6 +106,7 @@ ws.send(JSON.stringify({
 ## Examples
 
 ### Python
+
 ```python
 import requests
 
@@ -117,6 +123,7 @@ print(response.json())
 ```
 
 ### JavaScript
+
 ```javascript
 const analyzeCode = async (code) => {
     const response = await fetch('https://api.devassist.com/code/review', {
