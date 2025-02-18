@@ -23,8 +23,9 @@ PRIVACY_URL = f"{BOT_WEBSITE}/privacy"
 
 # Branding
 EMBED_COLOR = 0x9F7AEA  # Purple
-AUTHOR_NAME = "Built by Drago"
+AUTHOR_NAME = "Built by Drago | Product of Indie Hub"
 AUTHOR_ICON = f"{BOT_WEBSITE}/assets/logo.png"
+INDIE_HUB_LINK = "https://discord.gg/9bPsjgnJ5v"
 
 # Command Settings
 COOLDOWN_TIME = 3  # seconds
@@ -35,3 +36,7 @@ DEFAULT_DELETE_DAYS = 7
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 LOG_FILE = 'bot.log'
+
+# Copyright and Attribution
+COPYRIGHT = "© 2025 Indie Hub. All rights reserved."
+ATTRIBUTION = "A product of Indie Hub - Empowering Independent Developers"
