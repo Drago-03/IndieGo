@@ -118,9 +118,3 @@ python src/main.py
    rm data/subscriptions.db
    python scripts/init_db.py
    ```
-
-### Getting Help
-
-- Check [FAQ](FAQ.md)
-- Join our [Discord server](https://discord.gg/your-invite)
-- Open an [issue](https://github.com/your-username/devassist-bot/issues)
