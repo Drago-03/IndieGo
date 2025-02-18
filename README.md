@@ -5,7 +5,7 @@
 ![IndieGO Banner](IndieGO.JPG)
 
 [![Discord](https://img.shields.io/discord/1292805470117171231)](https://discord.gg/9bPsjgnJ5v)
-[![License](https://img.shields.io/badge/license-Boost%201.0-lightgrey)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/downloads/)
 [![Author](https://img.shields.io/badge/author-Drago-purple)](https://github.com/Drago-03)
 [![Invite](https://img.shields.io/badge/invite-IndieGO-green)](https://discord.com/oauth2/authorize?client_id=1304755116255088670)
