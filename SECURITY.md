@@ -50,4 +50,4 @@ We offer rewards for responsible disclosure:
 ## Contact
 
 [Email](mantejarora@gmail.com)
-PGP Key: [Download](link-to-pgp-key)
+PGP Key: [Download](link-to-pgp-key) #will be added soon
