@@ -7,7 +7,6 @@ This guide provides detailed instructions for setting up the DevAssist Discord b
 - Python 3.8 or higher
 - pip (Python package manager)
 - A Discord account and application
-- An OpenAI API key
 
 ## Step-by-Step Installation
 
@@ -33,8 +32,8 @@ brew install python git
 ### 2. Clone Repository
 
 ```bash
-git clone https://github.com/your-username/devassist-bot.git
-cd devassist-bot
+git clone https://github.com/Drago-03/IndieGo.git
+cd IndieGo
 ```
 
 ### 3. Virtual Environment (Recommended)
@@ -68,7 +67,6 @@ pip install -r requirements.txt
 
    ```env
    DISCORD_TOKEN=your_discord_token_here
-   OPENAI_API_KEY=your_openai_api_key_here
    ```
 
 3. Configure `config.py`:
