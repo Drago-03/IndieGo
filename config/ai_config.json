@@ -1,0 +1,78 @@
+{
+    "model": {
+        "name": "indiego",
+        "version": "1.0.0",
+        "architecture": {
+            "type": "transformer",
+            "vocab_size": 50257,
+            "n_positions": 4096,
+            "n_embd": 4096,
+            "n_layer": 32,
+            "n_head": 32,
+            "activation_function": "gelu_new",
+            "resid_pdrop": 0.1,
+            "embd_pdrop": 0.1,
+            "attn_pdrop": 0.1,
+            "layer_norm_epsilon": 1e-5,
+            "initializer_range": 0.02,
+            "use_cache": true
+        },
+        "tokenizer": {
+            "type": "gpt2",
+            "padding_side": "left",
+            "truncation_side": "right",
+            "model_max_length": 4096
+        }
+    },
+    "training": {
+        "batch_size": 8,
+        "gradient_accumulation_steps": 4,
+        "learning_rate": 5e-5,
+        "weight_decay": 0.01,
+        "warmup_ratio": 0.1,
+        "num_train_epochs": 3,
+        "max_steps": null,
+        "logging_steps": 100,
+        "eval_steps": 500,
+        "save_steps": 1000,
+        "save_total_limit": 5
+    },
+    "data": {
+        "train_file": "datasets/final/train.jsonl",
+        "validation_file": "datasets/final/validation.jsonl",
+        "max_seq_length": 1024,
+        "preprocessing_num_workers": 4
+    },
+    "generation": {
+        "max_length": 1024,
+        "min_length": 0,
+        "do_sample": true,
+        "early_stopping": false,
+        "num_beams": 1,
+        "temperature": 0.7,
+        "top_k": 50,
+        "top_p": 0.9,
+        "repetition_penalty": 1.2,
+        "length_penalty": 1.0,
+        "no_repeat_ngram_size": 3,
+        "num_return_sequences": 1
+    },
+    "serving": {
+        "host": "0.0.0.0",
+        "port": 8000,
+        "model_path": "checkpoints/best",
+        "tokenizer_path": null,
+        "device": "cuda",
+        "max_batch_size": 32,
+        "timeout": 30
+    },
+    "logging": {
+        "level": "INFO",
+        "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    },
+    "wandb": {
+        "project": "indiego",
+        "entity": null,
+        "tags": ["transformer", "code", "nlp"]
+    }
+} 
