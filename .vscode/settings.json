@@ -2,11 +2,15 @@
     "cSpell.words": [
         "automod",
         "bbuim",
+        "codechallenge",
+        "codehelp",
         "COOLDOWN",
         "devassist",
         "dotenv",
         "Drago",
         "fvah",
+        "genai",
+        "generativeai",
         "googleusercontent",
         "iprh",
         "ipynb",
@@ -15,6 +19,8 @@
         "pycache",
         "Pytest",
         "SEGTJU",
+        "serverinfo",
+        "unmute",
         "venv"
     ]
 }
