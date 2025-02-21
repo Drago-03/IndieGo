@@ -27,8 +27,27 @@ aiosqlite>=0.17.0
 loguru>=0.6.0
 
 # ML and Data Processing
-transformers>=4.0.0
-torch>=1.7.0
+transformers>=4.30.0
+torch>=2.1.0
+accelerate>=0.25.0
+bitsandbytes>=0.41.0
+sentencepiece>=0.1.99
+tokenizers>=0.15.0
+datasets>=2.15.0
+evaluate>=0.4.0
+scikit-learn>=1.3.0
+numpy>=1.24.0
+pandas>=2.1.0
+wandb>=0.15.0  # for experiment tracking
+deepspeed>=0.12.0  # for distributed training
+onnx>=1.15.0  # for model optimization
+onnxruntime>=1.16.0
+safetensors>=0.4.0
+
+# Code Processing
+tree-sitter>=0.20.1
+pygments>=2.16.0
+libclang>=16.0.0
 
 # OCR
 pytesseract
