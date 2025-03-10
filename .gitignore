@@ -99,6 +99,10 @@ wheels/
 .installed.cfg
 *.egg
 
+# Logs
+*.log
+bot.log
+
 # IDE
 .idea/
 .vscode/
