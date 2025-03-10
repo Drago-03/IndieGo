@@ -31,6 +31,7 @@
         "levelname",
         "libclang",
         "loguru",
+        "massrole",
         "ngram",
         "numpy",
         "onnx",
@@ -53,6 +54,7 @@
         "sqlalchemy",
         "ujson",
         "unmute",
+        "unmuted",
         "uvicorn",
         "venv",
         "wandb"

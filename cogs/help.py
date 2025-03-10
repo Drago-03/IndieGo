@@ -34,7 +34,7 @@ class HelpDropdown(Select):
         if category == "General":
             embed.add_field(name="Commands", value="• ping - Check bot latency\n• about - About the bot\n• choose - Choose between options\n• serverinfo - Server information\n• support - Get support server link\n• profile - Show profile options", inline=False)
         elif category == "Moderation":
-            embed.add_field(name="Commands", value="• kick - Kick a member\n• ban - Ban a member\n• mute - Mute a member\n• unmute - Unmute a member\n• warn - Warn a member\n• clear - Clear messages", inline=False)
+            embed.add_field(name="Commands", value="• kick - Kick a member\n• ban - Ban a member\n• mute - Mute a member\n• unmute - Unmute a member\n• warn - Warn a member\n• clear - Clear messages\n• massrole - Assign role to multiple users from file\n• massrole_upload - Upload file to assign roles", inline=False)
         elif category == "Fun":
             embed.add_field(name="Commands", value="• roll - Roll a dice\n• 8ball - Ask the magic 8ball\n• joke - Get a random joke\n• codechallenge - Get a coding challenge\n• trivia - Start a programming trivia", inline=False)
         elif category == "AI Assistant":
