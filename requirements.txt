@@ -63,3 +63,7 @@ gtts
 ffmpeg-python
 pydub
 pyaudio>=0.2.11
+
+# AI Services
+anthropic  # for Claude API
+google-generativeai>=0.8.4  # for Gemini API

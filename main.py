@@ -49,8 +49,9 @@ class IndieGOBot(commands.Bot):
             'cogs.dm_interaction',# DM interaction thirteenth
             'cogs.voice_channel',# Voice channel fourteenth
             'cogs.ocr',# OCR fifteenth
-            'cogs.reddit'# Reddit sixteenth
+            'cogs.reddit',# Reddit sixteenth
             'cogs.interactions',# Interactions seventeenth
+            'cogs.massrole'    # Mass role assignment eighteenth
         ]
         self.cog_status = {}
 

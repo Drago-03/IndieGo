@@ -56,5 +56,6 @@
         "uvicorn",
         "venv",
         "wandb"
-    ]
+    ],
+    "git.ignoreLimitWarning": true
 }

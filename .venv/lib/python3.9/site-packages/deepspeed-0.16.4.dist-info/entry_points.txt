@@ -1,0 +1,2 @@
+[pytest_randomly.random_seeder]
+deepspeed = deepspeed.runtime.utils:set_random_seed
