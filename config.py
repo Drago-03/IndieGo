@@ -6,7 +6,7 @@ load_dotenv()
 
 # Bot Configuration
 TOKEN = os.getenv('DISCORD_TOKEN')
-PREFIX = os.getenv('COMMAND_PREFIX', '!')  # Default prefix is ! if not specified
+PREFIX = os.getenv('COMMAND_PREFIX', 'i!')  # Default prefix is i! if not specified
 LOG_CHANNEL_ID = int(os.getenv('LOG_CHANNEL_ID', '1308525133048188949'))
 
 # URLs and Endpoints

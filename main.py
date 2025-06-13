@@ -2,107 +2,168 @@ import asyncio
 import logging
 import sys
 import traceback
-
 import discord
 from discord.ext import commands
-
-from config import TOKEN, PREFIX
+import os
+from config import TOKEN, PREFIX, LOG_CHANNEL_ID
 
 # Set up logging
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.DEBUG,  # Change to DEBUG for more info
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler('bot.log')
+        logging.StreamHandler(sys.stdout)
     ]
 )
 logger = logging.getLogger('IndieGOBot')
 
-# Set up intents
-intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True
-intents.guilds = True
+# Define test guild IDs for faster command registration during development
+TEST_GUILD_IDS = [1308525132620914688]  # Test server ID
 
-class IndieGOBot(commands.Bot):
+# Set up intents
+intents = discord.Intents.all()  # Use all intents for testing
+
+class SimpleBot(commands.Bot):
     def __init__(self):
         super().__init__(
-            command_prefix=PREFIX,
+            command_prefix=commands.when_mentioned_or(PREFIX),  # Respond to mentions too
             intents=intents,
-            help_command=None,  # Disable default help command
-            application_id=1304755116255088670  # Add your bot's application ID here
+            description="A Discord bot for developers",
+            case_insensitive=True,
+            help_command=None
         )
-        self.initial_extensions = [
-            'cogs.errors',      # Error handling first
-            'cogs.base',        # Base functionality second
-            'cogs.help',        # Help system third
-            'cogs.general',     # Core features fourth
-            'cogs.moderation',  # Moderation fifth
-            'cogs.admin',       # Admin sixth
-            'cogs.tickets',     # Tickets seventh
-            'cogs.logging',     # Logging eighth
-            'cogs.fun',         # Fun ninth
-            'cogs.ai_assistant',# AI assistant tenth
-            'cogs.coding_help', # Coding help eleventh
-            'cogs.automod',     # Automod twelfth
-            'cogs.dm_interaction',# DM interaction thirteenth
-            'cogs.voice_channel',# Voice channel fourteenth
-            'cogs.ocr',# OCR fifteenth
-            'cogs.reddit',# Reddit sixteenth
-            'cogs.interactions',# Interactions seventeenth
-            'cogs.massrole'    # Mass role assignment eighteenth
-        ]
-        self.cog_status = {}
-
-    async def setup_hook(self):
-        logger.info('Starting bot setup...')
         
-        # Load cogs with enhanced error handling
-        for extension in self.initial_extensions:
-            try:
-                logger.debug(f'Attempting to load extension: {extension}')
-                await self.load_extension(extension)
-                self.cog_status[extension] = True
-                logger.info(f'✓ Successfully loaded: {extension}')
-            except Exception as e:
-                self.cog_status[extension] = False
-                logger.error(f'✗ Failed to load: {extension}')
-                logger.error(f'Error type: {type(e).__name__}')
-                logger.error(f'Error details: {str(e)}')
-                logger.error(traceback.format_exc())
-                continue
-
-        # Sync commands with enhanced error handling
+    async def setup_hook(self):
+        logger.info('Bot setup starting...')
+        
+        # Add basic commands directly
+        self.add_commands()
+        
+        # Try to load the general cog
         try:
-            logger.info('Syncing command tree...')
-            synced = await self.tree.sync()
-            logger.info(f'✓ Successfully synced {len(synced)} commands')
+            await self.load_extension('cogs.general')
+            logger.info('✓ Successfully loaded general cog')
         except Exception as e:
-            logger.error('✗ Failed to sync command tree')
-            logger.error(f'Error type: {type(e).__name__}')
-            logger.error(f'Error details: {str(e)}')
+            logger.error(f'✗ Failed to load general cog: {str(e)}')
             logger.error(traceback.format_exc())
-
+        
+        # Sync commands
+        try:
+            logger.info('Syncing commands...')
+            for guild_id in TEST_GUILD_IDS:
+                try:
+                    # Copy commands to guild for immediate testing
+                    self.tree.copy_global_to(guild=discord.Object(id=guild_id))
+                    await self.tree.sync(guild=discord.Object(id=guild_id))
+                    logger.info(f'✓ Synced commands to guild {guild_id}')
+                except Exception as e:
+                    logger.error(f'✗ Failed to sync guild commands: {str(e)}')
+            
+            # Sync globally
+            await self.tree.sync()
+            logger.info('✓ Synced global commands')
+        except Exception as e:
+            logger.error(f'✗ Failed to sync commands: {str(e)}')
+            logger.error(traceback.format_exc())
+    
+    def add_commands(self):
+        """Add basic commands directly to the bot"""
+        
+        # Basic ping command
+        @self.command(name="ping")
+        async def ping(ctx):
+            await ctx.send(f"🏓 Pong! Bot latency: {round(self.latency * 1000)}ms")
+        
+        # Basic about command
+        @self.command(name="about")
+        async def about(ctx):
+            embed = discord.Embed(
+                title="🤖 About IndieGO Bot",
+                description="Your Ultimate Development & Design Companion",
+                color=discord.Color.blue()
+            )
+            embed.add_field(name="Version", value="1.0.0", inline=True)
+            embed.add_field(name="Library", value=f"Discord.py {discord.__version__}", inline=True)
+            await ctx.send(embed=embed)
+        
+        # Basic test command
+        @self.command(name="test")
+        async def test(ctx):
+            await ctx.send("✅ Bot is working! This is a test command.")
+        
+        # Basic sync command
+        @self.command(name="sync")
+        @commands.is_owner()
+        async def sync_cmd(ctx):
+            await ctx.send("Syncing commands...")
+            try:
+                # Sync to test guild
+                for guild_id in TEST_GUILD_IDS:
+                    self.tree.copy_global_to(guild=discord.Object(id=guild_id))
+                    await self.tree.sync(guild=discord.Object(id=guild_id))
+                
+                # Sync globally
+                synced = await self.tree.sync()
+                await ctx.send(f"✅ Synced {len(synced)} commands globally")
+            except Exception as e:
+                await ctx.send(f"❌ Error: {str(e)}")
+        
+        # Add slash commands
+        @self.tree.command(name="ping", description="Check bot latency")
+        async def ping_slash(interaction: discord.Interaction):
+            await interaction.response.send_message(
+                f"🏓 Pong! Bot latency: {round(self.latency * 1000)}ms"
+            )
+        
+        @self.tree.command(name="about", description="About the bot")
+        async def about_slash(interaction: discord.Interaction):
+            embed = discord.Embed(
+                title="🤖 About IndieGO Bot",
+                description="Your Ultimate Development & Design Companion",
+                color=discord.Color.blue()
+            )
+            embed.add_field(name="Version", value="1.0.0", inline=True)
+            embed.add_field(name="Library", value=f"Discord.py {discord.__version__}", inline=True)
+            await interaction.response.send_message(embed=embed)
+        
+        logger.info("✓ Added basic commands to bot")
+    
     async def on_ready(self):
         logger.info(f'Logged in as {self.user} (ID: {self.user.id})')
-        
-        # Report cog status
-        logger.info('\nCog Status:')
-        for cog, status in self.cog_status.items():
-            status_symbol = '✓' if status else '✗'
-            logger.info(f'{status_symbol} {cog}')
         
         # Set activity
         await self.change_presence(
             activity=discord.Activity(
-                type=discord.ActivityType.watching,
+                type=discord.ActivityType.listening,
                 name=f"{PREFIX}help | /help"
             )
         )
+        
+        # Print available commands for debugging
+        logger.info("\nAvailable Commands:")
+        for command in self.commands:
+            logger.info(f"Prefix Command: {command.name}")
+        
+        slash_commands = self.tree.get_commands()
+        for command in slash_commands:
+            logger.info(f"Slash Command: {command.name}")
+        
         logger.info('Bot is ready!')
 
-bot = IndieGOBot()
+    async def on_command_error(self, ctx, error):
+        """Handle command errors"""
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send(f"❌ Command not found. Try `{PREFIX}help` to see available commands.")
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(f"❌ Missing required argument: {error.param.name}")
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(f"❌ Bad argument: {str(error)}")
+        else:
+            logger.error(f"Command error: {str(error)}")
+            await ctx.send(f"❌ An error occurred: {str(error)}")
+
+# Create bot instance
+bot = SimpleBot()
 
 async def main():
     async with bot:

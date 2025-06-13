@@ -24,14 +24,17 @@
         "GOMLP",
         "googleusercontent",
         "gtts",
+        "huggingface",
         "indiego",
         "iprh",
         "ipynb",
         "kffhrnbd",
+        "KHTML",
         "levelname",
         "libclang",
         "loguru",
         "massrole",
+        "mistralai",
         "ngram",
         "numpy",
         "onnx",
@@ -57,7 +60,8 @@
         "unmuted",
         "uvicorn",
         "venv",
-        "wandb"
+        "wandb",
+        "youchat"
     ],
     "git.ignoreLimitWarning": true
 }

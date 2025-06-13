@@ -1,0 +1,1 @@
+{"1223008803138699315": {"enabled": true, "word_filter": ["badword1", "badword2", "badword3"], "spam_threshold": 5, "mention_threshold": 5, "caps_threshold": 70, "link_filter": true, "invite_filter": true, "punishment": "mute", "punishment_duration": 3600}}
